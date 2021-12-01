@@ -1,0 +1,2 @@
+import { changeTheme } from ".";
+changeTheme()
