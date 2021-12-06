@@ -1,22 +1,37 @@
 <template>
   <div class="wrapper" :style="{ 'height': height + 'px' }">
-    <img src="../assets/211026_3fj58dlc2jdl8bf3i3j0k4djcj931_846x931.png" alt />
+    <img :src="goodsData.imgUrl" :data-id="goodsData.id" alt />
     <div class="detail">
-      <p>男士羽绒服加长版</p>
+      <TextHide :text="goodsData.detail" />
       <div class="bottom">
-        <span>￥228</span>
-        <span>销量222</span>
+        <span>{{goodsData.price}}</span>
+        <span>销量{{100}}</span>
       </div>
     </div>
   </div>
 </template>
 <script>
+import TextHide from "./TextHide.vue"
 export default {
   name: 'Goods',
+  components:{
+    TextHide
+  },
   props: {
     height: {
       type: Number,
       default: 300
+    },
+    goodsData:{
+      type:Object,
+      default:()=>{
+        return {
+          imgUrl:'https://img12.360buyimg.com/n7/jfs/t1/205403/21/16178/317861/619b6b13E4f0f5bcd/a3ff899e58d8cf36.jpg',
+          detail:'男士羽绒服加长版',
+          price:'228',
+          sale:'222'
+        }
+      }
     }
   }
 }

@@ -22,7 +22,7 @@ export default {
           { title: '礼物男', src: 'src/assets/1636710897364.jpg', value: 'giftBoy' },
           { title: '礼物女', src: 'src/assets/1636710897364.jpg', value: 'giftGirl' },
           { title: '文具', src: 'src/assets/1636710897364.jpg',value:'stationery' },
-          { title: '零食', src: 'src/assets/1636710897364.jpg' },
+          { title: '零食', src: 'src/assets/1636710897364.jpg',value:'book' },
           { title: '零食', src: 'src/assets/1636710897364.jpg' },
           { title: '零食', src: 'src/assets/1636710897364.jpg' },
           { title: '零食', src: 'src/assets/1636710897364.jpg' },
@@ -42,7 +42,6 @@ export default {
           limit: 30
         }
       })
-      console.log(useRouter)
     }
     return {
       getData

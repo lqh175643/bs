@@ -31,10 +31,10 @@
             <el-color-picker v-model="color" show-alpha @change="colorChange" />
             <p style="margin-top: 10px;" class="bg_theme">主题背景</p>
             <div class="bg_img" @click="bgChange">
-                <img src='../assets/bg-1.jpg' alt="">
-                <img src='../assets/bg-2.jpg' alt="">
-                <img src='../assets/bg-3.jpg' alt="">
-                <img src='../assets/bg-3.jpg' alt="">
+                <img src="../assets/bg-1.jpg" alt />
+                <img src="../assets/bg-2.jpg" alt />
+                <img src="../assets/bg-3.jpg" alt />
+                <img src="../assets/bg-3.jpg" alt />
             </div>
         </div>
     </el-drawer>
@@ -64,11 +64,11 @@ export default {
     setup(props) {
         let drawer = ref(false)
         let color = ref('rgba(19, 206, 102, 0.8)')
-        let bgChange = function(event){
+        let bgChange = function (event) {
             console.log(event.target.src)
             document.body.style.background = `url(${event.target.src}) no-repeat top`
         }
-        let colorChange = function(){
+        let colorChange = function () {
             changeTheme(color.value)
         }
         return {
@@ -81,12 +81,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.drawer_body{
-    .font_color{
+.drawer_body {
+    .font_color {
         margin-right: 30px;
         vertical-align: 20px;
     }
-    .bg_img{
+    .bg_img {
         width: 100%;
         display: flex;
         flex-wrap: wrap;
