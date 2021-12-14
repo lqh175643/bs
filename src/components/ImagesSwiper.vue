@@ -107,6 +107,7 @@ i {
     width: 100%;
     img {
       width: 100%;
+      height: 412px;
     }
   }
   .left_swiper {
