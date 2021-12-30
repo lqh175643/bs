@@ -47,9 +47,10 @@ import Swiper from '../components/Swiper.vue'
 import Goods from '../components/Goods.vue'
 import Category from '../components/Category.vue'
 
-import { reactive, ref } from 'vue';
+import { reactive, ref ,beforeMount } from 'vue';
 
 import { changeTheme } from '../utils'
+import { get_local_storage } from '../utils/util'
 
 export default {
     name: 'Home',
@@ -71,6 +72,10 @@ export default {
         let colorChange = function () {
             changeTheme(color.value)
         }
+        beforeMount(()=>{
+            let token = get_local_storage('token')
+            
+        })
         return {
             drawer,
             color,

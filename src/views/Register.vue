@@ -1,69 +1,89 @@
 <template>
   <div class="login_wrapper">
-    <div class="top_notice">欢迎登录！注册即领取优惠券</div>
+    <div class="top_notice">欢迎注册！领取优惠券</div>
     <div class="loginBg_wrapper">
-      <img class="loginBg" src="../assets/loginBg.jpg" alt="登录背景" />
+      <img class="loginBg" src="../assets/loginBg.jpg" alt="注册背景" />
     </div>
     <div class="login_form">
-      <div class="login_form_header">欢迎登录</div>
+      <div class="login_form_header">欢迎注册</div>
       <div class="login_form_line"></div>
       <el-form
         ref="ruleFormRef"
         :model="ruleForm"
         status-icon
         :rules="rules"
-        label-width="60px"
+        label-width="70px"
         class="demo-ruleForm"
       >
         <el-form-item label="用户名" prop="user">
-          <el-input v-model="ruleForm.user" placeholder="用户名/手机号" autocomplete="off"></el-input>
+          <el-input v-model="ruleForm.user" placeholder="用户名" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="ruleForm.phone" placeholder="手机号" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="pass">
           <el-input v-model="ruleForm.pass" type="password" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item label="确认密码" prop="pass2">
+          <el-input v-model="ruleForm.pass2" type="password" autocomplete="off"></el-input>
+        </el-form-item>
       </el-form>
-      <div class="login_btn" @click="submitForm">登&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp录</div>
+      <div class="login_btn" @click="submitForm">注&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp册</div>
       <div class="login_form_line"></div>
-      <div class="register" @click="register">立即注册</div>
+      <div class="register" @click="login">已有帐号？登录</div>
     </div>
   </div>
 </template>
 <script>
-import { ref, onMounted, reactive } from 'vue';
-import {login} from '../api/login'
+import { ref, onMounted, reactive, h } from 'vue';
+import { register } from '../api/register'
 import { useRouter } from 'vue-router'
-
-import { set_local_storage } from '../utils/storage'
+import { ElNotification } from 'element-plus'
 
 export default {
-  name: 'Login',
+  name: 'Register',
   setup(props) {
-    const router = useRouter()
     const ruleFormRef = ref()
     const ruleForm = reactive({
       user: '',
       pass: '',
+      phone: '',
+      pass2: ''
     })
+    const router = useRouter()
+    function login() {
+      router.push({
+        path: '/login'
+      })
+    }
     function submitForm() {
+      const param = {
+        user: ruleForm.user,
+        pass: ruleForm.pass,
+        phone: ruleForm.phone
+      }
       ruleFormRef.value.validate((valid) => {
         if (valid) {
-          const param = {
-            user:ruleForm.user,
-            pass:window.btoa(ruleForm.pass)
-          }
-          login(param).then(res => {
-            if(res.token){
-              set_local_storage('token',res.token)
-            }else{
-              throw '获取token失败'
-            }
-            if(res.code==1){
-              router.push({
-                path:'/home'
+          register(param).then(res => {
+            console.log(res)
+            if (res.code == 0) {
+              ElNotification({
+                title: '注册失败',
+                message: res.mes,
+                type: 'warning'
               })
+            } else if (res.code == 1) {
+              ElNotification({
+                title: '注册成功',
+                message: '即将跳转到登录界面',
+                type: 'success'
+              })
+              setTimeout(() => {
+                login()
+              }, 1000)
             }
           }, err => {
-            console.log(err)
+            throw err
           })
         } else {
           console.log('error submit!!')
@@ -71,15 +91,22 @@ export default {
         }
       })
     }
-    const validatePass = (rule, value, callback) => {
-      // ruleForm.pass = ''
+    const validateUser = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入用户名'))
       } else {
         callback()
       }
     }
-    const validatePass2 = (rule, value, callback) => {
+    const validatePhone = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入手机号'))
+      } else {
+        callback()
+      }
+    }
+    const validatePass = (rule, value, callback) => {
+      // ruleForm.pass = ''
       if (value === '') {
         callback(new Error('请输入密码'))
       } else if (ruleForm.user === '') {
@@ -88,20 +115,28 @@ export default {
         callback()
       }
     }
-    const register = function(){
-      router.push({
-        path:`/register`
-      })
+    const validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请确认密码'))
+      } else if (ruleForm.user === '') {
+        callback(new Error('请先输入用户名'))
+      } else if (value !== ruleForm.pass) {
+        callback(new Error('两次密码不一致'))
+      } else {
+        callback()
+      }
     }
     return {
       ruleForm,
       rules: {
-        user: [{ validator: validatePass, trigger: 'change' }],
-        pass: [{ validator: validatePass2, trigger: 'change' }]
+        user: [{ validator: validateUser, trigger: 'change' }],
+        phone: [{ validator: validatePhone, trigger: 'change' }],
+        pass: [{ validator: validatePass, trigger: 'change' }],
+        pass2: [{ validator: validatePass2, trigger: 'blur' }]
       },
       ruleFormRef,
       submitForm,
-      register
+      login
     }
   }
 }
@@ -143,7 +178,7 @@ export default {
   .login_form {
     background-color: #fff;
     width: 435px;
-    height: 352px;
+    height: 455px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -184,7 +219,6 @@ export default {
       position: relative;
       top: 10px;
       left: 142px;
-      cursor: pointer;
     }
   }
 }

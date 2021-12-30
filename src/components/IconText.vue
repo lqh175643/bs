@@ -1,22 +1,28 @@
 <template>
-    <div class="main">
-        <i :class="['iconfont',icon]"></i>
-        <span>{{text}}</span>
-    </div>
+  <div class="main">
+    <i :class="['iconfont', icon]"></i>
+    <span>{{ text }}</span>
+  </div>
 </template>
 <script>
 export default {
-    name:'IconText',
-    props:{
-        icon:'',
-        text:''
-    },
+  name: 'IconText',
+  props: {
+    icon: '',
+    text: ''
+  },
 }
 </script>
 <style lang="scss" scoped>
-.main{
-    display: flex;
-    flex-direction: column;
-    font-size: 12px;
+.main {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  i {
+    text-align: center;
+  }
+  .span {
+    text-align: center;
+  }
 }
 </style>

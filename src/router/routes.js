@@ -32,4 +32,14 @@ export const routes = [
       },
     ],
   },
+  {
+    path: "/login",
+    component: () => import("../views/Login.vue"),
+    meta: { title:"登录",icon:""}
+  },
+  {
+    path: "/register",
+    component: () => import("../views/Register.vue"),
+    meta: { title:"注册",icon:""}
+  }
 ];

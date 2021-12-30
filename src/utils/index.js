@@ -12,8 +12,10 @@ function urlFilter(arr) {
     arr = arr.filter((item) => {
       if (item != "none" && item != undefined) return item;
     });
+    arr = arr.map(item=>{
+      return item.split('"')[1]
+    })
   }
-  console.log(arr);
   return arr;
 }
 export { changeTheme, urlFilter };

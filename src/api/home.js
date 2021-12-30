@@ -10,3 +10,7 @@ export function getCategoryData(url,options){
     params:options
   })
 }
+
+export function getUserInfo(token){
+
+}

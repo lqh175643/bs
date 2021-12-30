@@ -62,15 +62,21 @@
   </div>
   <div class="picture_and_comment">
     <div class="picture_and_comment_header" @click="headerChange">
-      <div :class="['header_item',header_item_index==0?'active_item':'']" data-index="0">商品介绍</div>
-      <div :class="['header_item',header_item_index==1?'active_item':'']" data-index="1">商品评价{{ goodsCount }}</div>
+      <div :class="['header_item', header_item_index == 0 ? 'active_item' : '']" data-index="0">商品介绍</div>
+      <div
+        :class="['header_item', header_item_index == 1 ? 'active_item' : '']"
+        data-index="1"
+      >商品评价{{ goodsCount }}</div>
     </div>
-    <div class="picture">
-      <!-- <div v-for="(item,index) in proPic" :key="index">
-        <img :src="item" alt="123"/>
-        {{item}}
-      </div> -->
-      <img :src="proPic?.[0]" alt="">
+    <div class="picture" v-if="header_item_index == 0">
+      <div v-for="(item,index) in proPic" :key="index">
+        <img :src="item" alt />
+      </div>
+    </div>
+    <div class="commit" v-else>
+      <div v-for="(item,index) in detailData.comment" :key="index" class="commit_item">
+        <Commit :commentData="item" />
+      </div>
     </div>
   </div>
 </template>
@@ -82,11 +88,13 @@ import { urlFilter } from '../utils'
 
 import ImagesSwiper from '../components/ImagesSwiper.vue'
 import Price from '../components/Price.vue'
+import Commit from '../components/Commit.vue'
 export default {
   name: 'Detail',
   components: {
     ImagesSwiper,
-    Price
+    Price,
+    Commit
   },
   setup(props) {
     const route = useRouter()
@@ -94,14 +102,14 @@ export default {
     let category = route.currentRoute.value.params.category
     let detailData = ref({})
     let address_value = ref('')
-    let header_item_index = ref(1)
+    let header_item_index = ref(0)
     const options = { id, category }
     let count = ref(1)
     const handleChange = function () {
 
     }
-    const headerChange = function(e){
-      if(e.target!==e.currentTarget){
+    const headerChange = function (e) {
+      if (e.target !== e.currentTarget) {
         header_item_index.value = e.target.dataset.index
       }
     }
@@ -111,11 +119,15 @@ export default {
       })
     })
     let goodsCount = computed(() => {
-      return `(${detailData.value.comment?.length>=10?'10+':''})`
+      return `(${detailData.value.comment?.length >= 10 ? '10+' : ''})`
     })
-    let proPic = computed(()=>{
-      return  urlFilter(detailData.value.introductionPicture)
+    let proPic = ref([])
+    watch(() => detailData.value.introductionPicture, () => {
+      proPic.value = urlFilter(detailData.value.introductionPicture)
     })
+    // let proPic = computed(() => {
+    //   return urlFilter(detailData.value.introductionPicture)
+    // })
     return {
       detailData,
       count,
@@ -263,6 +275,29 @@ export default {
   height: 50px;
   background-color: rgb(247, 247, 247);
   border-bottom: 1px red solid;
+  .picture {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 750px;
+    }
+  }
+  .commit {
+    margin-top: 30px;
+    .commit_item {
+        &::after {
+          content: "";
+          display: block;
+          height: 1px;
+          width: 100%;
+          background-color: gray;
+          margin-bottom: 20px;
+        }
+    }
+  }
   .picture_and_comment_header {
     display: flex;
     height: 100%;
@@ -287,8 +322,8 @@ export default {
       //   }
       // }
     }
-    .active_item{
-      background-color: rgb(228,57,60);
+    .active_item {
+      background-color: rgb(228, 57, 60);
       color: white;
     }
   }
