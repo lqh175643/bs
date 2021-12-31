@@ -15,8 +15,8 @@ export default {
             default: 600
         },
         height: {
-            type: Number,
-            default: 300
+            type: String,
+            default: "300"
         },
         getSwiperData: {
             type: Function,

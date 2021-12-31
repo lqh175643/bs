@@ -1,7 +1,7 @@
 import {str_parse} from './util'
 
-function set_local_storage(name, data ,delay) {
-  let createAt = Date.now();
+function set_local_storage(name, data ,delay=30*60) {
+  let createAt = Math.floor(Date.now()/1000);
   let expirationTime = createAt+delay
   let type = typeof data;
   if (type !== "object" && type !== "function") {
@@ -12,10 +12,10 @@ function set_local_storage(name, data ,delay) {
 }
 
 function get_local_storage(name){
-  let current = Date.now();
-  let item = str_parse(localStorage.getItem(name))
-  if(typeof item==='object'){
-    let expirationTime = item.expirationTime
+  const current = Math.floor(Date.now()/1000);
+  const item = str_parse(localStorage.getItem(name))
+  if(typeof item==='object' && item!=null){
+    const expirationTime = item.expirationTime
     if(expirationTime>=current){
       return item.data
     }

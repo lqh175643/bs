@@ -13,7 +13,6 @@ export default {
   name: 'Login',
   setup(props) {
     let router = useRouter()
-    console.log(router)
     let loginClick = function(){
       router.push({
         path:'/login'

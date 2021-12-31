@@ -8,9 +8,12 @@ import './assets/icon.css'
 import './assets/index.css'
 import './utils/init.js'
 
+import store from './vuex/index'
+
 const app = createApp(App)
 app.use(ElementPlus)
 app.use(router)
+app.use(store)
 
 app.mount('#app')
 

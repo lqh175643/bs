@@ -30,8 +30,10 @@
 </template>
 <script>
 import { ref, onMounted, reactive } from 'vue';
-import {login} from '../api/login'
+import { login } from '../api/login'
 import { useRouter } from 'vue-router'
+
+import { ElNotification } from 'element-plus'
 
 import { set_local_storage } from '../utils/storage'
 
@@ -48,18 +50,24 @@ export default {
       ruleFormRef.value.validate((valid) => {
         if (valid) {
           const param = {
-            user:ruleForm.user,
-            pass:window.btoa(ruleForm.pass)
+            user: ruleForm.user,
+            pass: window.btoa(ruleForm.pass)
           }
           login(param).then(res => {
-            if(res.token){
-              set_local_storage('token',res.token)
-            }else{
-              throw '获取token失败'
-            }
-            if(res.code==1){
+            if (res.code == 1) {
+              if (res.token) {
+                set_local_storage('token', res.token)
+              } else {
+                throw '获取token失败'
+              }
               router.push({
-                path:'/home'
+                path: '/home'
+              })
+            } else {
+              ElNotification({
+                title: '登录失败',
+                message: res.mes,
+                type: 'warning'
               })
             }
           }, err => {
@@ -88,9 +96,9 @@ export default {
         callback()
       }
     }
-    const register = function(){
+    const register = function () {
       router.push({
-        path:`/register`
+        path: `/register`
       })
     }
     return {
@@ -141,7 +149,7 @@ export default {
     }
   }
   .login_form {
-    background-color: #fff;
+    background-color: rgba(255,255,255,0.6);
     width: 435px;
     height: 352px;
     display: flex;

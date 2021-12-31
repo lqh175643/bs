@@ -176,7 +176,7 @@ export default {
     }
   }
   .login_form {
-    background-color: #fff;
+    background-color: rgba(255,255,255,.6);
     width: 435px;
     height: 455px;
     display: flex;
@@ -219,6 +219,7 @@ export default {
       position: relative;
       top: 10px;
       left: 142px;
+      cursor: pointer;
     }
   }
 }

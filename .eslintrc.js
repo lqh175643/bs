@@ -30,7 +30,7 @@ module.exports = {
         'vue/singleline-html-element-content-newline': 'off',
         'vue/multiline-html-element-content-newline':'off',
         'vue/html-indent': ['error', 4],
-        indent: ['error', 4], // 4行缩进
+        indent: ['error', 2], // 4行缩进
         'vue/script-indent': ['error', 4],
         quotes: ['error', 'single'], // 单引号
         'vue/html-quotes': ['error', 'single'],
