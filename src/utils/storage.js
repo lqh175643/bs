@@ -24,7 +24,12 @@ function get_local_storage(name){
   }
 }
 
+function delete_local_storage(name){
+  localStorage.removeItem(name)
+}
+
 export {
   set_local_storage,
-  get_local_storage
+  get_local_storage,
+  delete_local_storage
 }

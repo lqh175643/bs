@@ -56,7 +56,7 @@
       </div>
       <div class="footer">
         <div class="buy">立即购买</div>
-        <div class="bus">加入购物车</div>
+        <div class="bus" @click="addBus">加入购物车</div>
       </div>
     </div>
   </div>
@@ -82,13 +82,15 @@
 </template>
 <script>
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { onBeforeMount, reactive, ref, computed, watch } from 'vue'
-import { getDetail } from '../api/detail'
+import { getDetail,detailAddBus } from '../api/detail'
 import { urlFilter } from '../utils'
 
 import ImagesSwiper from '../components/ImagesSwiper.vue'
 import Price from '../components/Price.vue'
 import Commit from '../components/Commit.vue'
+import { holdUserInfo } from '../utils/util'
 export default {
   name: 'Detail',
   components: {
@@ -98,6 +100,9 @@ export default {
   },
   setup(props) {
     const route = useRouter()
+    const detailCategory = window.location.href.split('detail/')[1].split('/')[0]
+    console.log(detailCategory)
+    const store = useStore()
     let id = route.currentRoute.value.params.id
     let category = route.currentRoute.value.params.category
     let detailData = ref({})
@@ -113,6 +118,20 @@ export default {
         header_item_index.value = e.target.dataset.index
       }
     }
+    const addBus = function(){
+      const jid = detailData.value.id
+      if(id){
+        detailAddBus({
+          target:'shopBus',
+          jid,
+          goodCount:count.value
+        }).then(res=>{
+          console.log(123,res)
+
+          holdUserInfo(store)
+        })
+      }
+    }
     onBeforeMount(() => {
       getDetail(options).then(res => {
         detailData.value = res
@@ -125,14 +144,12 @@ export default {
     watch(() => detailData.value.introductionPicture, () => {
       proPic.value = urlFilter(detailData.value.introductionPicture)
     })
-    // let proPic = computed(() => {
-    //   return urlFilter(detailData.value.introductionPicture)
-    // })
     return {
       detailData,
       count,
       address_value,
       handleChange,
+      addBus,
       goodsCount,
       header_item_index,
       headerChange,
@@ -256,6 +273,7 @@ export default {
         border-radius: 5px;
         margin-left: 72px;
         margin-right: 40px;
+        cursor: pointer;
       }
       .bus {
         width: 180px;
@@ -266,6 +284,7 @@ export default {
         border: 1px gray solid;
         color: black;
         border-radius: 5px;
+        cursor: pointer;
       }
     }
   }
@@ -288,14 +307,14 @@ export default {
   .commit {
     margin-top: 30px;
     .commit_item {
-        &::after {
-          content: "";
-          display: block;
-          height: 1px;
-          width: 100%;
-          background-color: gray;
-          margin-bottom: 20px;
-        }
+      &::after {
+        content: "";
+        display: block;
+        height: 1px;
+        width: 100%;
+        background-color: gray;
+        margin-bottom: 20px;
+      }
     }
   }
   .picture_and_comment_header {

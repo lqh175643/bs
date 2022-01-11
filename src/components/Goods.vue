@@ -2,7 +2,7 @@
   <div class="wrapper" :style="{ 'height': height + 'px' }">
     <img :src="goodsData.imgUrl" :data-id="goodsData.id" alt />
     <div class="detail">
-      <TextHide :text="goodsData.detail" />
+      <TextHide :count="20" class="margin_top_10 text" :text="goodsData.detail" />
       <div class="bottom">
         <span>{{goodsData.price}}</span>
         <span>销量{{100}}</span>
@@ -27,7 +27,7 @@ export default {
       default:()=>{
         return {
           imgUrl:'https://img12.360buyimg.com/n7/jfs/t1/205403/21/16178/317861/619b6b13E4f0f5bcd/a3ff899e58d8cf36.jpg',
-          detail:'男士羽绒服加长版',
+          detail:'男士羽绒服加长版男士羽绒服加长版男士羽绒服加长版男士羽绒服加长版',
           price:'228',
           sale:'222'
         }
@@ -53,6 +53,13 @@ export default {
     border-radius: 0 0 10px 10px;
     width: 100%;
     height: 30%;
+    .margin_top_10{
+      padding-top: 10px;
+      padding: 10px 10px;
+    }
+    .text{
+      height: 38px;
+    }
     p{
       margin: 10px 0px 0 10px;
       display: inline-block;
@@ -60,7 +67,7 @@ export default {
     .bottom {
       margin-left: 10px;
       margin-top: 30px;
-      margin: 30px 10px 0px 10px ;
+      margin: 2px 10px 0px 10px ;
       display: flex;
       justify-content: space-between;
     }

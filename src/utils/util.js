@@ -1,4 +1,4 @@
-import { get_local_storage } from '../utils/storage'
+import { get_local_storage,delete_local_storage } from '../utils/storage'
 import { getUserInfo } from '../api/home'
 
 function str_parse(data){
@@ -14,8 +14,7 @@ function str_parse(data){
 function holdUserInfo(store){
   const token = get_local_storage('token')
   if (token) {
-    getUserInfo(token).then(res => {
-      console.log(res)
+    getUserInfo().then(res => {
       store.commit('updateUserInfo',res.data)
     }, err => {
       console.log(err)
@@ -23,7 +22,13 @@ function holdUserInfo(store){
   }
 }
 
+function deleteUserInfo(store){
+  delete_local_storage('token')
+  store.state.userInfo = {}
+}
+
 export {
   str_parse,
-  holdUserInfo
+  holdUserInfo,
+  deleteUserInfo
 }

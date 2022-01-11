@@ -17,13 +17,13 @@ export default {
       // default:()=>{}
       default: () => {
         return [
-          { title: '零食', src: 'src/assets/1636710897364.jpg', value: 'snacks' },
-          { title: '衣服', src: 'src/assets/1636710897364.jpg', value: 'clothes' },
-          { title: '礼物男', src: 'src/assets/1636710897364.jpg', value: 'giftBoy' },
-          { title: '礼物女', src: 'src/assets/1636710897364.jpg', value: 'giftGirl' },
-          { title: '文具', src: 'src/assets/1636710897364.jpg',value:'stationery' },
-          { title: '零食', src: 'src/assets/1636710897364.jpg',value:'book' },
-          { title: '零食', src: 'src/assets/1636710897364.jpg' },
+          { title: '零食', src: 'src/assets/lingshi.png', value: 'snacks' },
+          { title: '衣服', src: 'src/assets/yifu.png', value: 'clothes' },
+          { title: '礼物男', src: 'src/assets/liwunan.png', value: 'giftBoy' },
+          { title: '礼物女', src: 'src/assets/liwunv.png', value: 'giftGirl' },
+          { title: '文具', src: 'src/assets/wenju.png',value:'stationery' },
+          { title: '书籍', src: 'src/assets/shuji.png',value:'book' },
+          { title: '运动', src: 'src/assets/yundong.png',value:'sport' },
           { title: '零食', src: 'src/assets/1636710897364.jpg' },
           { title: '零食', src: 'src/assets/1636710897364.jpg' },
           { title: '零食', src: 'src/assets/1636710897364.jpg' }
@@ -70,6 +70,7 @@ export default {
     img {
       width: 70px;
       height: 90px;
+      border-radius: 5px;
     }
     p {
       margin-top: 5px;

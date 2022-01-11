@@ -14,6 +14,14 @@ const store = createStore({
       state.userInfo = payload
     }
   },
+  getters:{
+    username:state=>{
+      return state.userInfo.username
+    },
+    shopBus:state=>{
+      return state.userInfo.shopBus
+    }
+  },
   actions: {},
 });
 

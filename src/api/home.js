@@ -11,12 +11,9 @@ export function getCategoryData(url,options){
   })
 }
 
-export function getUserInfo(token){
+export function getUserInfo(){
   return instance({
     url:`/userInfo`,
-    method:'get',
-    headers:{
-      token
-    }
+    method:'get'
   })
 }

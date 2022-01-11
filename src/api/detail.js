@@ -6,3 +6,11 @@ export function getDetail(options){
     method:'get'
   })
 }
+
+export function detailAddBus(options){
+  return instance({
+    url:`/detail/operation`,
+    method:'post',
+    params:options
+  })
+}

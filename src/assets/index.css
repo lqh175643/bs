@@ -25,3 +25,9 @@ body {
 img {
   vertical-align: top;
 }
+.margin_left_10{
+  margin-left:10px;
+}
+.margin_right_10{
+  margin-right:10px;
+}

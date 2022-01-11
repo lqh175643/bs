@@ -1,0 +1,210 @@
+<template>
+  <el-table ref="multipleTableRef" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table-column type="selection" width="55" />
+    <el-table-column label="商品" width="400">
+      <template #default="scope">
+        <div class="goods_wrapper">
+          <img :src="scope.row.goods.img" alt />
+          <div>{{ scope.row.goods.des }}</div>
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column prop="price" label="单价(元)" width="120" />
+    <el-table-column prop="count" label="数量" show-overflow-tooltip>
+      <template #default="scope">
+        <div class="count_wrapper">
+          <el-input-number
+            v-model="scope.row.count"
+            :min="1"
+            :max="100"
+            size="small"
+            @change="handleChange"
+          />
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column prop="curprice" label="小计(元)" width="120" />
+    <el-table-column prop="operation" label="操作">
+      <template #default="scope">
+        <div class="operation_wrapper">
+          <template v-for="item in scope.row.operation">
+            <div v-if="item == 'delete'">删除</div>
+            <div v-else-if="item == 'check'">查看</div>
+          </template>
+        </div>
+      </template>
+    </el-table-column>
+  </el-table>
+  <div class="bottom_bar">
+    <span class="margin_right_10" @click="handtoggleAllSelection">全选</span>
+    <span class="margin_right_10" @click="toggleSelection()">取消选项</span>
+    <span @click="moveToCol">移入收藏夹</span>
+    <span class="totle_count">
+      共有
+      <i>{{ totleCount }}</i> 件商品
+    </span>
+    <span class="totle_price">
+      总计
+      <i>{{ totlePrice }}</i>
+    </span>
+    <span class="go_pay">去支付</span>
+  </div>
+</template>
+<script>
+import { ref, reactive } from 'vue';
+import { ElMessage } from 'element-plus'
+import { useStore } from 'vuex'
+import { onBeforeMount } from 'vue';
+
+import { getShopBus } from '../../api/userHome';
+
+export default {
+  name: 'ShopBus',
+  setup(props) {
+    const store = useStore()
+    const shopBus = store.getters.shopBus || {}
+    const multipleTableRef = ref()
+    let totleCount = ref(0)
+    let totlePrice = ref(0)
+    let tableData = ref([])
+    let tempRows = []
+    const handleSelectionChange = (val) => {
+      tempRows = val
+      let count = 0
+      let price = 0
+      val.forEach((item) => {
+        count += item.count
+        price += item.count * item.price
+      })
+      totleCount.value = count
+      totlePrice.value = price
+      getSummaries(val)
+    }
+    const handtoggleAllSelection = (val) => {
+      multipleTableRef.value.toggleAllSelection()
+    }
+    const toggleSelection = (rows) => {
+      if (rows) {
+        rows.forEach((row) => {
+          multipleTableRef.value.toggleRowSelection(row, undefined)
+        })
+      } else {
+        multipleTableRef.value.clearSelection()
+      }
+    }
+    const getSummaries = function (param) {
+      let sum = 0
+      if (Array.isArray(param)) {
+        param.forEach((item) => {
+          sum += (item.price * item.count)
+        })
+      }
+      return [sum]
+    }
+    const handleChange = () => {
+      handleSelectionChange(tempRows)
+    }
+    const moveToCol = () => {
+      ElMessage({
+        message: '收藏成功',
+        type: 'success',
+        offset: 60
+      })
+    }
+    onBeforeMount(() => {
+      const params = {
+        ids:JSON.stringify(Object.keys(shopBus))
+      }
+      // const valu = Object.keys()
+      getShopBus(params).then(res => {
+        console.log(res,12346)
+        res.forEach((val,index)=>{
+          tableData.value.push({
+            goods:{
+              img:val.imgUrl,
+              des:val.detail
+            },
+            price:val.price.split('￥')[1],
+            count:1,
+            operation:['delete'],
+            curprice:0
+          })
+        })
+      }, err => {
+        console.log(err)
+      })
+    })
+    
+    return {
+      multipleTableRef,
+      handleSelectionChange,
+      toggleSelection,
+      handtoggleAllSelection,
+      getSummaries,
+      handleChange,
+      moveToCol,
+      tableData,
+      totleCount,
+      totlePrice
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+:deep(.el-input-number--small) {
+  width: 105px;
+}
+.goods_wrapper {
+  display: flex;
+  // height: 100px;
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+  }
+  div {
+    height: 100px;
+    margin-left: 10px;
+    font-size: 20px;
+    line-height: 32px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+}
+.bottom_bar {
+  position: relative;
+  padding: 20px;
+  margin-top: 20px;
+  width: 100%;
+  border: 1px rgba(0, 0, 0, 0.1) solid;
+  cursor: pointer;
+  i {
+    color: deeppink;
+    font-size: 18px;
+  }
+  .totle_count {
+    position: absolute;
+    right: 300px;
+  }
+  .totle_price {
+    position: absolute;
+    right: 200px;
+  }
+  .go_pay {
+    display: inline-block;
+    font-size: 25px;
+    height: 100%;
+    width: 150px;
+    background-color: deeppink;
+    color: white;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-align: center;
+    line-height: 60px;
+  }
+}
+</style>

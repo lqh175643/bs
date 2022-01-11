@@ -41,5 +41,23 @@ export const routes = [
     path: "/register",
     component: () => import("../views/Register.vue"),
     meta: { title:"注册",icon:""}
-  }
+  },
+  {
+    path: "/userHome",
+    component: () => import("../views/UserHome/index.vue"),
+    meta: { title:"用户主页",icon:""},
+    redirect: "/userHome/order",
+    children:[
+      {
+        path:'/userHome/order',
+        component:()=>import("../views/UserHome/Order.vue"),
+        meta: { title:"我的订单",icon:"" }
+      },
+      {
+        path:'/userHome/shopbus',
+        component:()=>import("../views/UserHome/ShopBus.vue"),
+        meta: { title:"购物车",icon:"" }
+      },
+    ]
+  },
 ];
