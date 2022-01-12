@@ -1,7 +1,7 @@
 <template>
-  <el-table ref="multipleTableRef" :data="tableData" @selection-change="handleSelectionChange">
+  <el-table ref="multipleTableRef" :data="tableData" @select="handleSelectionChange">
     <el-table-column type="selection" width="55" />
-    <el-table-column label="商品" width="400">
+    <el-table-column label="商品" width="450">
       <template #default="scope">
         <div class="goods_wrapper">
           <img :src="scope.row.goods.img" alt />
@@ -10,7 +10,7 @@
       </template>
     </el-table-column>
     <el-table-column prop="price" label="单价(元)" width="120" />
-    <el-table-column prop="count" label="数量" show-overflow-tooltip>
+    <el-table-column prop="count" label="数量">
       <template #default="scope">
         <div class="count_wrapper">
           <el-input-number
@@ -18,7 +18,7 @@
             :min="1"
             :max="100"
             size="small"
-            @change="handleChange"
+            @change="handleNumChange"
           />
         </div>
       </template>
@@ -64,11 +64,12 @@ export default {
     const store = useStore()
     const shopBus = store.getters.shopBus || {}
     const multipleTableRef = ref()
-    let totleCount = ref(0)
-    let totlePrice = ref(0)
+    let totleCount = ref('0')
+    let totlePrice = ref('0.00')
     let tableData = ref([])
     let tempRows = []
     const handleSelectionChange = (val) => {
+      console.log(12, val)
       tempRows = val
       let count = 0
       let price = 0
@@ -77,8 +78,7 @@ export default {
         price += item.count * item.price
       })
       totleCount.value = count
-      totlePrice.value = price
-      getSummaries(val)
+      totlePrice.value = price.toFixed(2)
     }
     const handtoggleAllSelection = (val) => {
       multipleTableRef.value.toggleAllSelection()
@@ -92,17 +92,16 @@ export default {
         multipleTableRef.value.clearSelection()
       }
     }
-    const getSummaries = function (param) {
-      let sum = 0
-      if (Array.isArray(param)) {
-        param.forEach((item) => {
-          sum += (item.price * item.count)
-        })
-      }
-      return [sum]
-    }
-    const handleChange = () => {
-      handleSelectionChange(tempRows)
+    const handleNumChange = () => {
+      // handleSelectionChange(tempRows)
+      let count = 0
+      let price = 0
+      tempRows.forEach((item) => {
+        count += item.count
+        price += item.count * item.price
+      })
+      totleCount.value = count
+      totlePrice.value = price.toFixed(2)
     }
     const moveToCol = () => {
       ElMessage({
@@ -113,35 +112,33 @@ export default {
     }
     onBeforeMount(() => {
       const params = {
-        ids:JSON.stringify(Object.keys(shopBus))
+        ids: JSON.stringify(Object.keys(shopBus))
       }
-      // const valu = Object.keys()
       getShopBus(params).then(res => {
-        console.log(res,12346)
-        res.forEach((val,index)=>{
+        console.log(res, 12346)
+        res.forEach((val, index) => {
           tableData.value.push({
-            goods:{
-              img:val.imgUrl,
-              des:val.detail
+            goods: {
+              img: val.imgUrl,
+              des: val.detail
             },
-            price:val.price.split('￥')[1],
-            count:1,
-            operation:['delete'],
-            curprice:0
+            price: val.price.split('￥')[1],
+            count: 1,
+            operation: ['delete'],
+            curprice: 0,
           })
         })
       }, err => {
         console.log(err)
       })
     })
-    
+
     return {
       multipleTableRef,
       handleSelectionChange,
       toggleSelection,
       handtoggleAllSelection,
-      getSummaries,
-      handleChange,
+      handleNumChange,
       moveToCol,
       tableData,
       totleCount,
@@ -156,6 +153,7 @@ export default {
 }
 .goods_wrapper {
   display: flex;
+  padding-right: 60px;
   // height: 100px;
   img {
     width: 100px;
