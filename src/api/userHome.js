@@ -7,3 +7,18 @@ export function getShopBus(options){
     params:options
   })
 }
+export function deleteUserInfo(options){
+  return instance({
+    url:`/userInfo/delete`,
+    method:'delete',
+    data:options
+  })
+}
+
+export function deleteUserInfoArr(options){
+  return instance({
+    url:`/userInfo/deleteArr`,
+    method:'delete',
+    data:options
+  })
+}

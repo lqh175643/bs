@@ -14,3 +14,11 @@ export function detailAddBus(options){
     params:options
   })
 }
+
+export function detailShoucang(options){
+  return instance({
+    url:`/userInfo/collection`,
+    method:'post',
+    data:options
+  })
+}

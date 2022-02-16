@@ -11,10 +11,10 @@ function str_parse(data){
   return result
 }
 
-function holdUserInfo(store){
+async function holdUserInfo(store){
   const token = get_local_storage('token')
   if (token) {
-    getUserInfo().then(res => {
+    await getUserInfo().then(res => {
       store.commit('updateUserInfo',res.data)
     }, err => {
       console.log(err)

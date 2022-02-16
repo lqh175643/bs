@@ -12,22 +12,6 @@
       <div class="detail_price">
         <Price :price="detailData.price" />
       </div>
-      <div class="service">
-        <span class="margin-right-10">服务说明</span>
-        <span>
-          <i :class="['iconfont', 'icon-kongxinduigou']"></i>1小时内发货
-        </span>
-        <span>
-          <i :class="['iconfont', 'icon-kongxinduigou']"></i>2天无理由退货
-        </span>
-        <span>
-          <i :class="['iconfont', 'icon-kongxinduigou']"></i>全校包邮
-        </span>
-        <br />
-        <span class="next-line">
-          <i :class="['iconfont', 'icon-kongxinduigou']"></i>延误必赔
-        </span>
-      </div>
       <div class="address">
         <span class="margin-right-10">配&ensp;送&ensp;至</span>
         <span class="address-select">
@@ -46,7 +30,12 @@
       <div class="count">
         <span class="margin-right-10">数&nbsp;&nbsp;量</span>
         <span class="counter">
-          <el-input-number v-model="count" :min="1" :max="10" @change="handleChange" />
+          <el-input-number
+            v-model="count"
+            :min="1"
+            :max="10"
+            @change="handleChange"
+          />
         </span>
       </div>
       <div class="pay_func">
@@ -55,95 +44,149 @@
         <span>支付宝</span>
       </div>
       <div class="footer">
+        <i
+          :class="['iconfont', 'icon-shoucang', 'shoucang']"
+          @click="shoucang"
+        ></i>
         <div class="buy">立即购买</div>
         <div class="bus" @click="addBus">加入购物车</div>
+      </div>
+      <div class="service">
+        <span class="margin-right-10">服务说明</span>
+        <span>
+          <i :class="['iconfont', 'icon-kongxinduigou']"></i>1小时内发货
+        </span>
+        <span>
+          <i :class="['iconfont', 'icon-kongxinduigou']"></i>2天无理由退货
+        </span>
+        <span>
+          <i :class="['iconfont', 'icon-kongxinduigou']"></i>全校包邮
+        </span>
+        <br />
+        <span class="next-line">
+          <i :class="['iconfont', 'icon-kongxinduigou']"></i>延误必赔
+        </span>
       </div>
     </div>
   </div>
   <div class="picture_and_comment">
     <div class="picture_and_comment_header" @click="headerChange">
-      <div :class="['header_item', header_item_index == 0 ? 'active_item' : '']" data-index="0">商品介绍</div>
+      <div
+        :class="['header_item', header_item_index == 0 ? 'active_item' : '']"
+        data-index="0"
+      >
+        商品介绍
+      </div>
       <div
         :class="['header_item', header_item_index == 1 ? 'active_item' : '']"
         data-index="1"
-      >商品评价{{ goodsCount }}</div>
+      >
+        商品评价{{ goodsCount }}
+      </div>
     </div>
     <div class="picture" v-if="header_item_index == 0">
-      <div v-for="(item,index) in proPic" :key="index">
+      <div v-for="(item, index) in proPic" :key="index">
         <img :src="item" alt />
       </div>
     </div>
     <div class="commit" v-else>
-      <div v-for="(item,index) in detailData.comment" :key="index" class="commit_item">
+      <div
+        v-for="(item, index) in detailData.comment"
+        :key="index"
+        class="commit_item"
+      >
         <Commit :commentData="item" />
       </div>
     </div>
   </div>
 </template>
 <script>
-import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
-import { onBeforeMount, reactive, ref, computed, watch } from 'vue'
-import { getDetail,detailAddBus } from '../api/detail'
-import { urlFilter } from '../utils'
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { onBeforeMount, reactive, ref, computed, watch } from "vue";
+import { getDetail, detailAddBus, detailShoucang } from "../api/detail";
+import { urlFilter } from "../utils";
 
-import ImagesSwiper from '../components/ImagesSwiper.vue'
-import Price from '../components/Price.vue'
-import Commit from '../components/Commit.vue'
-import { holdUserInfo } from '../utils/util'
+import ImagesSwiper from "../components/ImagesSwiper.vue";
+import Price from "../components/Price.vue";
+import Commit from "../components/Commit.vue";
+import { footprint } from "../api/home";
+import { holdUserInfo } from "../utils/util";
 export default {
-  name: 'Detail',
+  name: "Detail",
   components: {
     ImagesSwiper,
     Price,
-    Commit
+    Commit,
   },
   setup(props) {
-    const route = useRouter()
-    const detailCategory = window.location.href.split('detail/')[1].split('/')[0]
-    console.log(detailCategory)
-    const store = useStore()
-    let id = route.currentRoute.value.params.id
-    let category = route.currentRoute.value.params.category
-    let detailData = ref({})
-    let address_value = ref('')
-    let header_item_index = ref(0)
-    const options = { id, category }
-    let count = ref(1)
-    const handleChange = function () {
-
-    }
+    const route = useRouter();
+    const store = useStore();
+    let id = route.currentRoute.value.params.id;
+    let category = route.currentRoute.value.params.category;
+    let detailData = ref({});
+    let address_value = ref("");
+    let header_item_index = ref(0);
+    const options = { id, category };
+    let count = ref(1);
+    const handleChange = function () {};
     const headerChange = function (e) {
       if (e.target !== e.currentTarget) {
-        header_item_index.value = e.target.dataset.index
+        header_item_index.value = e.target.dataset.index;
       }
-    }
-    const addBus = function(){
-      const jid = detailData.value.id
-      if(id){
+    };
+    const addBus = function () {
+      const jid = detailData.value.id;
+      if (id) {
         detailAddBus({
-          target:'shopBus',
+          target: "shopBus",
           jid,
-          goodCount:count.value
-        }).then(res=>{
-          console.log(123,res)
-
-          holdUserInfo(store)
-        })
+          goodCount: count.value,
+        }).then((res) => {
+          holdUserInfo(store);
+        });
       }
-    }
+    };
+    const shoucang = function () {
+      const jid = detailData.value.id;
+      if (id) {
+        detailShoucang({
+          target: "collect",
+          jid,
+        }).then((res) => {
+          holdUserInfo(store);
+        });
+      }
+    };
     onBeforeMount(() => {
-      getDetail(options).then(res => {
-        detailData.value = res
-      })
-    })
+      getDetail(options)
+        .then((res) => {
+          detailData.value = res;
+          const jid = detailData.value.id;
+          return Promise.resolve(jid);
+        })
+        .then((jid) => {
+          return footprint({ jid, target: "footprint" });
+        })
+        .then(
+          (res) => {
+            holdUserInfo(store);
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+    });
     let goodsCount = computed(() => {
-      return `(${detailData.value.comment?.length >= 10 ? '10+' : ''})`
-    })
-    let proPic = ref([])
-    watch(() => detailData.value.introductionPicture, () => {
-      proPic.value = urlFilter(detailData.value.introductionPicture)
-    })
+      return `(${detailData.value.comment?.length >= 10 ? "10+" : ""})`;
+    });
+    let proPic = ref([]);
+    watch(
+      () => detailData.value.introductionPicture,
+      () => {
+        proPic.value = urlFilter(detailData.value.introductionPicture);
+      }
+    );
     return {
       detailData,
       count,
@@ -154,31 +197,32 @@ export default {
       header_item_index,
       headerChange,
       proPic,
+      shoucang,
       options: ref([
         {
-          value: 'Option1',
-          label: 'Option1',
+          value: "Option1",
+          label: "Option1",
         },
         {
-          value: 'Option2',
-          label: 'Option2',
+          value: "Option2",
+          label: "Option2",
         },
         {
-          value: 'Option3',
-          label: 'Option3',
+          value: "Option3",
+          label: "Option3",
         },
         {
-          value: 'Option4',
-          label: 'Option4',
+          value: "Option4",
+          label: "Option4",
         },
         {
-          value: 'Option5',
-          label: 'Option5',
+          value: "Option5",
+          label: "Option5",
         },
       ]),
-    }
-  }
-}
+    };
+  },
+};
 </script>
 <style lang="scss" scoped>
 :deep(.el-input-number) {
@@ -261,18 +305,18 @@ export default {
     }
     .footer {
       margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       .buy {
         width: 180px;
         height: 50px;
-        float: left;
         background-color: rgba(239, 47, 35, 0.95);
         display: flex;
         justify-content: center;
         align-items: center;
         color: white;
         border-radius: 5px;
-        margin-left: 72px;
-        margin-right: 40px;
         cursor: pointer;
       }
       .bus {
@@ -284,6 +328,10 @@ export default {
         border: 1px gray solid;
         color: black;
         border-radius: 5px;
+        cursor: pointer;
+      }
+      .shoucang {
+        font-size: 40px;
         cursor: pointer;
       }
     }

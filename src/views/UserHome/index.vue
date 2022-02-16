@@ -8,11 +8,17 @@
             src="https://s11.mogucdn.com/mlcdn/5abf39/211231_65lk47e3281ei18969g8g5e1a89ki_100x100.jpg_100x100.jpg"
             alt="头像"
           />
-          <span class="content_left_head_username">{{ username || 'mdhawji' }}</span>
+          <span class="content_left_head_username">{{
+            username || "mdhawji"
+          }}</span>
           <div class="content_left_head_line"></div>
         </div>
         <div class="content_left_bar">
-          <el-menu default-active="1-1" class="el-menu-vertical-demo" @click="itemClick">
+          <el-menu
+            default-active="1-1"
+            class="el-menu-vertical-demo"
+            @click="itemClick"
+          >
             <el-sub-menu index="1">
               <template #title>
                 <i class="iconfont icon-dingdan"></i>
@@ -56,6 +62,13 @@
       </div>
       <div class="content_right">
         <Search />
+        <div class="goHome" @click="goHome">
+          <IconText
+            text="首页"
+            icon="icon-zhuye"
+            class="tab_bar_icon"
+          ></IconText>
+        </div>
         <template v-if="tableData.length <= 0">
           <el-empty description=" " :image-size="400">
             <div class="empty_text">什么也没有</div>
@@ -69,78 +82,101 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue'
-import Search from '../../components/Search.vue'
-import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
+import { ref } from "vue";
+import Search from "../../components/Search.vue";
+import IconText from "../../components/IconText.vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 export default {
-  name: 'index',
+  name: "index",
   components: {
-    Search
+    Search,
+    IconText,
   },
   setup(props) {
-    const router = useRouter()
-    const store = useStore()
-    const uid = store.state.id
+    const router = useRouter();
+    const store = useStore();
+    const uid = store.state.id;
     const itemClick = (e) => {
-      if (e.target.localName == 'li') {
-        const index = e.target.dataset.index
-        console.log(e.target.dataset.index)
+      if (e.target.localName == "li") {
+        const index = e.target.dataset.index;
+        console.log(e.target.dataset.index);
         switch (index) {
-          case '1-1':
+          case "1-1":
             router.push({
-              path: '/userHome/order',
+              path: "/userHome/order",
               params: {
-                uid
-              }
-            })
+                uid,
+              },
+            });
             break;
-          case '2':
+          case "2":
             router.push({
-              path: '/userHome/shopbus',
+              path: "/userHome/shopbus",
               params: {
-                uid
-              }
-            })
+                uid,
+              },
+            });
             break;
-
+          case "3":
+            router.push({
+              path: "/userHome/collection",
+              params: {
+                uid,
+              },
+            });
+            break;
+          case "4":
+            router.push({
+              path: "/userHome/footprint",
+              params: {
+                uid,
+              },
+            });
+            break;
           default:
             break;
         }
       }
-    }
+    };
     const tableData = [
       {
         goods: {
-          img: 'https://s11.mogucdn.com/mlcdn/5abf39/211231_65lk47e3281ei18969g8g5e1a89ki_100x100.jpg_100x100.jpg',
-          des: '我gdiwuahdowaihdoiwahoidjwaiojdiowahdfoiwhaiodhjwaiohdoiuwahduiwadwadwadwadwadwadwa',
+          img: "https://s11.mogucdn.com/mlcdn/5abf39/211231_65lk47e3281ei18969g8g5e1a89ki_100x100.jpg_100x100.jpg",
+          des: "我gdiwuahdowaihdoiwahoidjwaiojdiowahdfoiwhaiodhjwaiohdoiuwahduiwadwadwadwadwadwadwa",
         },
         price: 180,
         count: 1,
-        saled: '暂无售后',
+        saled: "暂无售后",
         allPrice: 988,
         status: 0,
-        operation: ['delete', 'check']
+        operation: ["delete", "check"],
       },
       {
         goods: {
-          img: 'https://s11.mogucdn.com/mlcdn/5abf39/211231_65lk47e3281ei18969g8g5e1a89ki_100x100.jpg_100x100.jpg',
-          des: '我gdiwuahdowaihdoiwahoidjwaiojdiowahdfoiwhaiodhjwaiohdoiuwahduiwadwadwadwadwadwadwa',
+          img: "https://s11.mogucdn.com/mlcdn/5abf39/211231_65lk47e3281ei18969g8g5e1a89ki_100x100.jpg_100x100.jpg",
+          des: "我gdiwuahdowaihdoiwahoidjwaiojdiowahdfoiwhaiodhjwaiohdoiuwahduiwadwadwadwadwadwadwa",
         },
         price: 180,
         count: 1,
-        saled: '暂无售后',
+        saled: "暂无售后",
         allPrice: 988,
         status: 0,
-        operation: ['delete', 'check']
-      }
-    ]
+        operation: ["delete", "check"],
+      },
+    ];
+    const goHome = function () {
+      router.push({
+        path: "/",
+      });
+    };
     return {
       tableData,
-      itemClick
-    }
-  }
-}
+      itemClick,
+      goHome,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -209,6 +245,14 @@ export default {
       box-sizing: border-box;
       padding-left: 50px;
       margin-top: 16px;
+      .goHome {
+        display: inline-block;
+        float: right;
+        cursor: pointer;
+        .tab_bar_icon {
+          margin: 0 8px;
+        }
+      }
     }
   }
 }

@@ -58,6 +58,16 @@ export const routes = [
         component:()=>import("../views/UserHome/ShopBus.vue"),
         meta: { title:"购物车",icon:"" }
       },
+      {
+        path:'/userHome/collection',
+        component:()=>import("../views/UserHome/Collection.vue"),
+        meta: { title:"收藏",icon:"" }
+      },
+      {
+        path:'/userHome/footprint',
+        component:()=>import("../views/UserHome/FootPrint.vue"),
+        meta: { title:"足迹",icon:"" }
+      }
     ]
   },
 ];

@@ -1,13 +1,13 @@
 <template>
   <CategoryBar @barChange="barChange" />
   <div class="goods" @click="goToDetail">
-    <div v-for="item in goodsDatas" class="goods_item" >
+    <div v-for="(item,index) in goodsDatas" :key="index" class="goods_item" >
       <Goods :goodsData="item" />
     </div>
   </div>
   <div class="block">
     <el-pagination
-      v-model:currentPage="currentPage"
+      v-model:current-page="currentPage"
       layout="total, sizes, prev, pager, next, jumper"
       :total="totalCount"
       :page-sizes="[10, 20, 30, 50, 100]"
@@ -66,6 +66,7 @@ export default {
     function getData(url, query) {
       getCategoryData(url, query).then(res => {
         totalCount.value = res.totalCount
+        console.log(res,1234)
         goodsDatas.value = res.data
       }).catch(err => {
 
@@ -90,6 +91,8 @@ export default {
       
     }
     onBeforeMount(() => {
+      console.log(99999999999999)
+
       getCategoryData(url, query).then(res => {
         totalCount.value = res.totalCount
         goodsDatas.value = res.data

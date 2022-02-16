@@ -1,6 +1,16 @@
 <template>
-  <el-table ref="multipleTableRef" :data="tableData" @select="handleSelectionChange">
-    <el-table-column type="selection" width="55" />
+  <el-table
+    ref="multipleTableRef"
+    :data="tableData"
+    :row-key="getRowKeys"
+    @select="handleSelectionChange"
+  >
+    <el-table-column
+      type="selection"
+      :reserve-selection="true"
+      row-key="jid"
+      width="55"
+    />
     <el-table-column label="商品" width="450">
       <template #default="scope">
         <div class="goods_wrapper">
@@ -10,7 +20,7 @@
       </template>
     </el-table-column>
     <el-table-column prop="price" label="单价(元)" width="120" />
-    <el-table-column prop="count" label="数量">
+    <el-table-column prop="count" label="数量" width="150">
       <template #default="scope">
         <div class="count_wrapper">
           <el-input-number
@@ -23,14 +33,22 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column prop="curprice" label="小计(元)" width="120" />
+    <el-table-column prop="curprice" label="小计(元)" width="120">
+      <template #default="scope">
+        <div class="operation_wrapper">
+          {{scope.row.count*scope.row.price}}
+        </div>
+      </template>
+    </el-table-column>
     <el-table-column prop="operation" label="操作">
       <template #default="scope">
         <div class="operation_wrapper">
-          <template v-for="item in scope.row.operation">
-            <div v-if="item == 'delete'">删除</div>
+          <block v-for="(item,index) in scope.row.operation" :key="index">
+            <div v-if="item == 'delete'" @click="btnDelete(scope.row)">
+              删除
+            </div>
             <div v-else-if="item == 'check'">查看</div>
-          </template>
+          </block>
         </div>
       </template>
     </el-table-column>
@@ -49,89 +67,141 @@
     </span>
     <span class="go_pay">去支付</span>
   </div>
+  <el-dialog v-model="dialogVisible" title="确定移除" width="30%">
+    <span>是否移除此商品</span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="shopBusDelete">确定</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <script>
-import { ref, reactive } from 'vue';
-import { ElMessage } from 'element-plus'
-import { useStore } from 'vuex'
-import { onBeforeMount } from 'vue';
+import { ref, reactive, computed } from "vue";
+import { ElMessage } from "element-plus";
+import { useStore } from "vuex";
+import { onBeforeMount } from "vue";
 
-import { getShopBus } from '../../api/userHome';
+import { getShopBus, deleteUserInfo } from "../../api/userHome";
+import { holdUserInfo } from '../../utils/util'
 
 export default {
-  name: 'ShopBus',
+  name: "ShopBus",
   setup(props) {
-    const store = useStore()
-    const shopBus = store.getters.shopBus || {}
-    const multipleTableRef = ref()
-    let totleCount = ref('0')
-    let totlePrice = ref('0.00')
-    let tableData = ref([])
-    let tempRows = []
+    const store = useStore();
+    const multipleTableRef = ref();
+    let totleCount = ref("0");
+    let totlePrice = ref("0.00");
+    let tableData = ref([]);
+    let dialogVisible = ref(false);
+    let tempDelete = ref("");
+    let tempRows = [];
     const handleSelectionChange = (val) => {
-      console.log(12, val)
-      tempRows = val
-      let count = 0
-      let price = 0
+      console.log(12, val);
+      tempRows = val;
+      let count = 0;
+      let price = 0;
       val.forEach((item) => {
-        count += item.count
-        price += item.count * item.price
-      })
-      totleCount.value = count
-      totlePrice.value = price.toFixed(2)
-    }
+        count += item.count;
+        price += item.count * item.price;
+      });
+      totleCount.value = count;
+      totlePrice.value = price.toFixed(2);
+    };
     const handtoggleAllSelection = (val) => {
-      multipleTableRef.value.toggleAllSelection()
-    }
+      multipleTableRef.value.toggleAllSelection();
+    };
     const toggleSelection = (rows) => {
       if (rows) {
         rows.forEach((row) => {
-          multipleTableRef.value.toggleRowSelection(row, undefined)
-        })
+          multipleTableRef.value.toggleRowSelection(row, undefined);
+        });
       } else {
-        multipleTableRef.value.clearSelection()
+        multipleTableRef.value.clearSelection();
       }
-    }
-    const handleNumChange = () => {
+    };
+    const handleNumChange = (e) => {
       // handleSelectionChange(tempRows)
-      let count = 0
-      let price = 0
+      let count = 0;
+      let price = 0;
       tempRows.forEach((item) => {
-        count += item.count
-        price += item.count * item.price
-      })
-      totleCount.value = count
-      totlePrice.value = price.toFixed(2)
-    }
+        count += item.count;
+        price += item.count * item.price;
+      });
+      totleCount.value = count;
+      totlePrice.value = price.toFixed(2);
+    };
     const moveToCol = () => {
       ElMessage({
-        message: '收藏成功',
-        type: 'success',
-        offset: 60
-      })
+        message: "收藏成功",
+        type: "success",
+        offset: 60,
+      });
+    };
+    const getRowKeys = (row) => {
+      return row.jid;
+    };
+    const shopBusDelete = () => {
+      deleteUserInfo({ jid: tempDelete.value, target: "shopBus" })
+        .then(
+          async (res) => {
+            ElMessage({
+              message: "删除成功",
+              type: "success",
+              offset: 60,
+            });
+            await holdUserInfo(store)
+            wrapper_getShopBus(store.getters.shopBus)
+          },
+          (err) => {
+            ElMessage({
+              message: "删除失败",
+              type: "error",
+              offset: 60,
+            });
+          }
+        )
+        .finally(() => {
+          dialogVisible.value = false;
+        });
+    };
+    const btnDelete = (row) => {
+      dialogVisible.value = true;
+      tempDelete.value = row.jid;
+    };
+    const wrapper_getShopBus = (shopBus)=>{
+      tableData.value = []
+      const params = {
+        ids: JSON.stringify(Object.keys(shopBus)),
+      };
+      getShopBus(params).then(
+        (res) => {
+          if (Array.isArray(res) && res.length > 0) {
+            console.log(res)
+            res.forEach((val, index) => {
+              tableData.value.push({
+                goods: {
+                  img: val.imgUrl,
+                  des: val.detail,
+                },
+                jid: val.id,
+                price: val.price.split("￥")[1],
+                count: 1,
+                operation: ["delete"],
+                curprice: 0
+              });
+            });
+          }
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
     }
     onBeforeMount(() => {
-      const params = {
-        ids: JSON.stringify(Object.keys(shopBus))
-      }
-      getShopBus(params).then(res => {
-        console.log(res, 12346)
-        res.forEach((val, index) => {
-          tableData.value.push({
-            goods: {
-              img: val.imgUrl,
-              des: val.detail
-            },
-            price: val.price.split('￥')[1],
-            count: 1,
-            operation: ['delete'],
-            curprice: 0,
-          })
-        })
-      }, err => {
-        console.log(err)
-      })
-    })
+      wrapper_getShopBus(store.getters.shopBus)
+    });
 
     return {
       multipleTableRef,
@@ -142,10 +212,14 @@ export default {
       moveToCol,
       tableData,
       totleCount,
-      totlePrice
-    }
-  }
-}
+      totlePrice,
+      getRowKeys,
+      shopBusDelete,
+      dialogVisible,
+      btnDelete,
+    };
+  },
+};
 </script>
 <style lang="scss" scoped>
 :deep(.el-input-number--small) {

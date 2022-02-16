@@ -20,7 +20,13 @@ const store = createStore({
     },
     shopBus:state=>{
       return state.userInfo.shopBus
-    }
+    },
+    collection:state=>{
+      return state.userInfo.collect
+    },
+    footprint:state=>{
+      return state.userInfo.footprint
+    },
   },
   actions: {},
 });

@@ -17,3 +17,11 @@ export function getUserInfo(){
     method:'get'
   })
 }
+
+export function footprint(options){
+  return instance({
+    url:`/userInfo/footprint`,
+    method:'post',
+    data:options
+  })
+}
