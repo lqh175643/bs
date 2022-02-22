@@ -57,6 +57,16 @@
                 <i class="iconfont icon-zuji"></i>足迹
               </template>
             </el-menu-item>
+            <el-menu-item index="5" data-index="5">
+              <template #title>
+                <i class="iconfont icon-gerenxinxi"></i>个人信息
+              </template>
+            </el-menu-item>
+            <el-menu-item index="6" data-index="6">
+              <template #title>
+                <i class="iconfont icon-shouhuodizhi"></i>收货地址
+              </template>
+            </el-menu-item>
           </el-menu>
         </div>
       </div>
@@ -129,6 +139,22 @@ export default {
           case "4":
             router.push({
               path: "/userHome/footprint",
+              params: {
+                uid,
+              },
+            });
+            break;
+          case "5":
+            router.push({
+              path: "/userHome/userinfo",
+              params: {
+                uid,
+              },
+            });
+            break;
+          case "6":
+            router.push({
+              path: "/userHome/receivingaddress",
               params: {
                 uid,
               },

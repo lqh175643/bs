@@ -22,3 +22,19 @@ export function deleteUserInfoArr(options){
     data:options
   })
 }
+
+export function modifyUserInfo(options){
+  return instance({
+    url:`/userInfo/userinfo`,
+    method:'post',
+    data:options
+  })
+}
+
+export function modifyReceivingAddress(options){
+  return instance({
+    url:`/userInfo/receivingAddress`,
+    method:'post',
+    data:options
+  })
+}

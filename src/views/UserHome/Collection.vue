@@ -87,7 +87,7 @@ export default {
       tempDelete.value = row.jid;
     };
     const shoucangDelete = () => {
-      deleteUserInfoArr({ jid: tempDelete.value, target: "collect" })
+      deleteUserInfoArr({ val: tempDelete.value, target: "collect" })
         .then(
           async (res) => {
             ElMessage({

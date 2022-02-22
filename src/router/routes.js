@@ -67,7 +67,17 @@ export const routes = [
         path:'/userHome/footprint',
         component:()=>import("../views/UserHome/FootPrint.vue"),
         meta: { title:"足迹",icon:"" }
-      }
+      },
+      {
+        path:'/userHome/userinfo',
+        component:()=>import("../views/UserHome/UserInfo.vue"),
+        meta: { title:"个人信息",icon:"" }
+      },
+      {
+        path:'/userHome/receivingaddress',
+        component:()=>import("../views/UserHome/ReceivingAddress.vue"),
+        meta: { title:"收货地址",icon:"" }
+      },
     ]
   },
 ];

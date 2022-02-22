@@ -15,17 +15,32 @@ const store = createStore({
     }
   },
   getters:{
+    userInfo:state=>{
+      return state.userInfo
+    },
     username:state=>{
       return state.userInfo.username
     },
     shopBus:state=>{
-      return state.userInfo.shopBus
+      return state.userInfo.shopBus || {}
     },
     collection:state=>{
-      return state.userInfo.collect
+      return state.userInfo.collect || []
     },
     footprint:state=>{
-      return state.userInfo.footprint
+      return state.userInfo.footprint || []
+    },
+    username:state=>{
+      return state.userInfo.username || ''
+    },
+    receivingAddress:state=>{
+      return state.userInfo.receivingAddress || []
+    },
+    consumerCoupon:state=>{
+      return state.userInfo.consumerCoupon || []
+    },
+    campusBean:state=>{
+      return state.userInfo.campusBean || 0
     },
   },
   actions: {},

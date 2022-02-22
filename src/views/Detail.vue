@@ -48,7 +48,7 @@
           :class="['iconfont', 'icon-shoucang', 'shoucang']"
           @click="shoucang"
         ></i>
-        <div class="buy">立即购买</div>
+        <div class="buy" @click="buy">立即购买</div>
         <div class="bus" @click="addBus">加入购物车</div>
       </div>
       <div class="service">
@@ -99,6 +99,7 @@
       </div>
     </div>
   </div>
+  <Shoping :dialogTableVisible="dialogTableVisible" :buyData="buyData" @shopClose="dialogTableVisible=false"/>
 </template>
 <script>
 import { useRouter } from "vue-router";
@@ -110,6 +111,8 @@ import { urlFilter } from "../utils";
 import ImagesSwiper from "../components/ImagesSwiper.vue";
 import Price from "../components/Price.vue";
 import Commit from "../components/Commit.vue";
+import Shoping from "../components/Shoping.vue";
+import { ElMessage } from "element-plus";
 import { footprint } from "../api/home";
 import { holdUserInfo } from "../utils/util";
 export default {
@@ -118,10 +121,12 @@ export default {
     ImagesSwiper,
     Price,
     Commit,
+    Shoping,
   },
   setup(props) {
     const route = useRouter();
     const store = useStore();
+    let dialogTableVisible = ref(false);
     let id = route.currentRoute.value.params.id;
     let category = route.currentRoute.value.params.category;
     let detailData = ref({});
@@ -129,11 +134,21 @@ export default {
     let header_item_index = ref(0);
     const options = { id, category };
     let count = ref(1);
+    const buyData = reactive({
+      img:'',
+      des:'',
+      price:'',
+      jid:id,
+      count:count.value
+    })
     const handleChange = function () {};
     const headerChange = function (e) {
       if (e.target !== e.currentTarget) {
         header_item_index.value = e.target.dataset.index;
       }
+    };
+    const buy = function () {
+      dialogTableVisible.value = true
     };
     const addBus = function () {
       const jid = detailData.value.id;
@@ -143,6 +158,11 @@ export default {
           jid,
           goodCount: count.value,
         }).then((res) => {
+          ElMessage({
+            message: "加入购物车成功",
+            type: "success",
+            offset: 60,
+          });
           holdUserInfo(store);
         });
       }
@@ -154,6 +174,11 @@ export default {
           target: "collect",
           jid,
         }).then((res) => {
+          ElMessage({
+            message: "收藏成功",
+            type: "success",
+            offset: 60,
+          });
           holdUserInfo(store);
         });
       }
@@ -162,6 +187,9 @@ export default {
       getDetail(options)
         .then((res) => {
           detailData.value = res;
+          buyData.img = res.images[0]
+          buyData.des = res.productDescription
+          buyData.price = res.price
           const jid = detailData.value.id;
           return Promise.resolve(jid);
         })
@@ -188,6 +216,7 @@ export default {
       }
     );
     return {
+      dialogTableVisible,
       detailData,
       count,
       address_value,
@@ -198,6 +227,8 @@ export default {
       headerChange,
       proPic,
       shoucang,
+      buy,
+      buyData,
       options: ref([
         {
           value: "Option1",
