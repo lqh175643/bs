@@ -42,6 +42,9 @@ const store = createStore({
     campusBean:state=>{
       return state.userInfo.campusBean || 0
     },
+    shopHistory:state=>{
+      return state.userInfo.shopHistory || []
+    }
   },
   actions: {},
 });

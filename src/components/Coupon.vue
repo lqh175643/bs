@@ -59,6 +59,7 @@ export default {
       div {
         margin-top: 20px;
         margin-left: 5px;
+        font-size: 14px;
       }
     }
   }

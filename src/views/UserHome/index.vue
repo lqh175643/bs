@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="app_title">校园购物</div>
+    <!-- <div class="app_title">校园购物</div> -->
     <div class="content">
       <div class="content_left">
         <div class="content_left_head">
@@ -238,10 +238,10 @@ export default {
   }
   .content {
     width: 100%;
-    display: flex;
     margin-top: 50px;
     .content_left {
-      flex: 1;
+      width: 200px;
+      float: left;
       // background-color: rgba(0,0,0,0.1);
       .content_left_head {
         height: 260px;
@@ -267,7 +267,8 @@ export default {
       }
     }
     .content_right {
-      flex: 5;
+      width: 1000px;
+      float: right;
       box-sizing: border-box;
       padding-left: 50px;
       margin-top: 16px;

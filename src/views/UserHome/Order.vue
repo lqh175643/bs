@@ -1,73 +1,115 @@
 <template>
   <div class="table_wrapper">
-    <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="goods" label="商品" width="320">
+    <el-table :data="tableData" style="width: 100%" max-height="700" stripe>
+      <el-table-column fixed label="商品信息" width="320">
         <template #default="scope">
-          <div class="goods_wrapper">
-            <img :src="scope.row.goods.img" alt />
-            <div>{{ scope.row.goods.des }}</div>
+          <div v-for="(good, index) in scope.row.goods" :key="index">
+            <div class="goods_wrapper">
+              <img :src="good.img" alt="商品图片" />
+              <div>{{ good.des }}</div>
+            </div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="price" label="单价(元)" width="100" />
-      <el-table-column prop="count" label="数量" width="100" />
-      <el-table-column prop="saled" label="售后" width="100" />
-      <el-table-column prop="allPrice" label="实付金额" width="120" />
-      <el-table-column prop="status" label="交易状态" width="120" />
-      <el-table-column prop="operation" label="操作">
+      <el-table-column prop="price" label="单价(元)" width="100">
+        <template #default="scope">
+          <div v-for="(good, index) in scope.row.goods" :key="index">
+            <div class="middle">
+              <div>{{ good.price }}</div>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="count" label="数量" width="60">
+        <template #default="scope">
+          <div v-for="(good, index) in scope.row.goods" :key="index">
+            <div class="middle">
+              <div>{{ good.count }}</div>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="折扣" width="120">
+        <template #default="scope">
+          <div>{{ "校园豆:￥" + scope.row.campusBean }}</div>
+          <div>{{ "优惠券:￥" + (scope.row.coupon.reduce || 0) }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="finalPrice" label="实付金额" width="100" />
+      <el-table-column prop="did" label="订单号" width="200" />
+      <el-table-column prop="generateTime" label="创建时间" width="120">
+        <template #default="scope">
+          <div class="middle">
+            <div>{{ formatDate(scope.row.generateTime) }}</div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="isPay" label="交易状态" width="100">
+        <template #default="scope">
+          {{ scope.row.isPay ? "已支付" : "未支付" }}
+        </template>
+      </el-table-column>
+      <el-table-column label="操作">
         <template #default="scope">
           <div class="operation_wrapper">
-            <template v-for="item in scope.row.operation">
-              <div v-if="item == 'delete'">删除</div>
-              <div v-else-if="item == 'check'">查看</div>
-            </template>
+            <div @click="orderDelete(scope)">删除</div>
+            <!-- <div v-else-if="item == 'check'">查看</div> -->
           </div>
         </template>
       </el-table-column>
     </el-table>
   </div>
+  <el-dialog v-model="dialogVisible" title="确定移除" width="30%">
+    <span>是否移除此商品</span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="determineDelete">确定</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <script>
+import { useStore } from "vuex";
+import { onBeforeMount, computed, ref } from "vue";
+import { formatDate, holdUserInfo } from "../../utils/util";
+import { deleteUserInfoArr } from "../../api/userHome";
 export default {
-  name: 'Order',
+  name: "Order",
   setup(props) {
-    const tableData = [
-      {
-        goods: {
-          img: 'https://s11.mogucdn.com/mlcdn/5abf39/211231_65lk47e3281ei18969g8g5e1a89ki_100x100.jpg_100x100.jpg',
-          des: '我gdiwuahdowaihdoiwahoidjwaiojdiowahdfoiwhaiodhjwaiohdoiuwahduiwadwadwadwadwadwadwa',
-        },
-        price: 180,
-        count: 1,
-        saled: '暂无售后',
-        allPrice: 988,
-        status: 0,
-        operation: ['delete', 'check']
-      },
-      {
-        goods: {
-          img: 'https://s11.mogucdn.com/mlcdn/5abf39/211231_65lk47e3281ei18969g8g5e1a89ki_100x100.jpg_100x100.jpg',
-          des: '我gdiwuahdowaihdoiwahoidjwaiojdiowahdfoiwhaiodhjwaiohdoiuwahduiwadwadwadwadwadwadwa',
-        },
-        price: 180,
-        count: 1,
-        saled: '暂无售后',
-        allPrice: 988,
-        status: 0,
-        operation: ['delete', 'check']
-      }
-    ]
+    const store = useStore();
+    const tableData = computed(() => store.getters.shopHistory);
+    const dialogVisible = ref(false);
+    const tempDelete = ref("");
+    const orderDelete = (scope) => {
+      dialogVisible.value = true;
+      tempDelete.value = scope.row.did
+    };
+    const determineDelete = () => {
+      deleteUserInfoArr({
+        val: { did: tempDelete.value },
+        target: "shopHistory",
+      }).then(() => {
+        holdUserInfo(store);
+      }).finally(()=>{
+        dialogVisible.value = false;
+      });
+    };
     return {
-      tableData
-    }
-  }
-}
+      tableData,
+      formatDate,
+      orderDelete,
+      dialogVisible,
+      determineDelete,
+    };
+  },
+};
 </script>
 <style lang="scss" scoped>
 :deep(.has-gutter) {
   tr {
     th {
-      background-color: rgba(0, 0, 0, 0.1) !important;
+      // background-color: rgba(0, 0, 0, 0.1) !important;
       .cell {
         font-size: 20px;
       }
@@ -79,24 +121,32 @@ export default {
     td {
       .cell {
         font-size: 18px;
+        font-family: simsun;
       }
     }
   }
+}
+.middle {
+  display: flex;
+  align-items: center;
+  height: 100px;
+  font-family: simsun;
 }
 .table_wrapper {
   margin-top: 30px;
   .goods_wrapper {
     display: flex;
-    // height: 100px;
     img {
       width: 100px;
       height: 100px;
       border-radius: 5px;
+      padding: 5px;
     }
     div {
+      font-family: simsun;
       height: 100px;
       margin-left: 10px;
-      font-size: 20px;
+      font-size: 16px;
       line-height: 32px;
       overflow: hidden;
       text-overflow: ellipsis;

@@ -31,6 +31,7 @@
         :key="index"
         :label="item"
         size="large"
+        class="pay_method"
         >{{ item }}</el-radio
       >
     </div>
@@ -97,8 +98,9 @@
 import { ref, reactive, computed } from "vue";
 import { useStore } from "vuex";
 import { _addrMap } from "../utils/util";
-
+import { ElMessage, ElLoading } from "element-plus";
 import Coupon from "../components/Coupon.vue";
+import { generateOrder } from "../api/order";
 export default {
   name: "Shoping",
   components: {
@@ -114,7 +116,7 @@ export default {
       default: false,
     },
   },
-  emits: ["shopClose"],
+  emits: ["shopClose", "myrefresh"],
   setup(props, cxt) {
     const buyData = Array.isArray(props.buyData)
       ? props.buyData
@@ -137,10 +139,11 @@ export default {
     });
     const payMethods = ["微信", "支付宝"];
     const consumerCoupons = store.getters.consumerCoupon;
-    let originalPrice = 0;
-    buyData.forEach(
-      (item) => (originalPrice += Number(item.price) * item.count)
-    );
+    const originalPrice = computed(() => {
+      let temp = 0;
+      buyData.forEach((item) => (temp += Number(item.price) * item.count));
+      return temp;
+    });
     const allPrice = computed(() => {
       const reduce = formData.consumerCoupon.reduce;
       let consumerCoupon = reduce ? reduce : 0;
@@ -152,8 +155,7 @@ export default {
 
     const formData = reactive({
       receiveInfo: "",
-      payMethod: "",
-      goods: [],
+      payMethod: "微信",
       consumerCoupon: "",
       campusBean: 0,
     });
@@ -161,18 +163,79 @@ export default {
       cxt.emit("shopClose");
       active_coupons.value = -1;
       formData.campusBean = 0;
+      formData.consumerCoupon = "";
     };
     const handleCoupons = (e, price) => {
-      if (price <= originalPrice) {
+      if (price <= originalPrice.value) {
         active_coupons.value = e;
-        formData.consumerCoupon = {
-          reduce: 2,
-        };
-        console.log(formData);
+        switch (price) {
+          case 10:
+            formData.consumerCoupon = {
+              reduce: 2,
+            };
+            break;
+          case 99:
+            formData.consumerCoupon = {
+              reduce: 10,
+            };
+            break;
+          default:
+            break;
+        }
       }
     };
     const goPay = () => {
-      
+      if (!formData.receiveInfo) {
+        ElMessage({
+          message: "请填写收货人信息",
+          type: "warning",
+          offset: 60,
+        });
+        return;
+      }
+      const loading = ElLoading.service({
+        lock: true,
+        text: "订单生成中",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      console.log(buyData);
+      generateOrder({
+        goods: buyData.map((val) => {
+          return {
+            jid: val.jid,
+            count: val.count,
+            des: val.des,
+            price: val.price,
+            img: val.img,
+          };
+        }),
+        generateTime: Date.now(),
+        originalPrice: originalPrice.value,
+        finalPrice: allPrice.value,
+        coupon: formData.consumerCoupon,
+        campusBean: formData.campusBean,
+        receiveInfo: formData.receiveInfo,
+        payMethod: formData.payMethod,
+        isPay: true,
+        isReceive: false,
+        isComment: false,
+      }).then(
+        () => {
+          setTimeout(() => {
+            loading.close();
+            cxt.emit("shopClose");
+            ElMessage({
+              message: "购买成功，查看请到我的订单",
+              type: "success",
+              offset: 60,
+            });
+          }, 1000);
+          cxt.emit("myrefresh");
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
     };
     return {
       dialogTableVisible,
@@ -212,6 +275,12 @@ export default {
     width: 300px;
   }
 }
+.pay_method {
+  font-size: 24px !important;
+  font-family: simsun;
+  font-weight: 600;
+}
+
 .footer_wrapper {
   display: flex;
   align-items: center;
@@ -235,6 +304,7 @@ export default {
     height: 60px;
     background-color: deeppink;
     color: white;
+    cursor: pointer;
   }
 }
 .shoping_footer {

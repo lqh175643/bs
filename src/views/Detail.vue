@@ -187,7 +187,7 @@ export default {
       getDetail(options)
         .then((res) => {
           detailData.value = res;
-          buyData.img = res.images[0]
+          buyData.img = res.images[0].replace('/n5/','/n1/')
           buyData.des = res.productDescription
           buyData.price = res.price
           const jid = detailData.value.id;

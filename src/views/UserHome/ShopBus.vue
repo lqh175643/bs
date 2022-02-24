@@ -3,6 +3,7 @@
     ref="multipleTableRef"
     :data="tableData"
     :row-key="getRowKeys"
+    @select-all="handleSelectionChange"
     @select="handleSelectionChange"
   >
     <el-table-column
@@ -36,19 +37,19 @@
     <el-table-column prop="curprice" label="小计(元)" width="120">
       <template #default="scope">
         <div class="operation_wrapper">
-          {{scope.row.count*scope.row.price}}
+          {{ (scope.row.count * scope.row.price).toFixed(2) }}
         </div>
       </template>
     </el-table-column>
     <el-table-column prop="operation" label="操作">
       <template #default="scope">
         <div class="operation_wrapper">
-          <block v-for="(item,index) in scope.row.operation" :key="index">
+          <div v-for="(item, index) in scope.row.operation" :key="index">
             <div v-if="item == 'delete'" @click="btnDelete(scope.row)">
               删除
             </div>
             <div v-else-if="item == 'check'">查看</div>
-          </block>
+          </div>
         </div>
       </template>
     </el-table-column>
@@ -65,7 +66,7 @@
       总计
       <i>{{ totlePrice }}</i>
     </span>
-    <span class="go_pay">去支付</span>
+    <span class="go_pay" @click="buyBtn">去支付</span>
   </div>
   <el-dialog v-model="dialogVisible" title="确定移除" width="30%">
     <span>是否移除此商品</span>
@@ -76,6 +77,13 @@
       </span>
     </template>
   </el-dialog>
+  <Shoping
+    :dialogTableVisible="dialogTableVisible"
+    v-if="dialogTableVisible"
+    :buyData="buyData"
+    @myrefresh="myrefresh"
+    @shopClose="dialogTableVisible = false"
+  />
 </template>
 <script>
 import { ref, reactive, computed } from "vue";
@@ -83,11 +91,15 @@ import { ElMessage } from "element-plus";
 import { useStore } from "vuex";
 import { onBeforeMount } from "vue";
 
+import Shoping from "../../components/Shoping.vue";
 import { getShopBus, deleteUserInfo } from "../../api/userHome";
-import { holdUserInfo } from '../../utils/util'
+import { holdUserInfo } from "../../utils/util";
 
 export default {
   name: "ShopBus",
+  components: {
+    Shoping,
+  },
   setup(props) {
     const store = useStore();
     const multipleTableRef = ref();
@@ -95,19 +107,44 @@ export default {
     let totlePrice = ref("0.00");
     let tableData = ref([]);
     let dialogVisible = ref(false);
+    let dialogTableVisible = ref(false);
     let tempDelete = ref("");
     let tempRows = [];
+    const buyData = ref([]);
+    const buyBtn = () => {
+      if (buyData.value.length <= 0) {
+        ElMessage({
+          message: "至少选择一种商品",
+          type: "warning",
+          offset: 60,
+        });
+        return;
+      }
+      dialogTableVisible.value = true;
+    };
     const handleSelectionChange = (val) => {
-      console.log(12, val);
+      console.log(123459)
       tempRows = val;
       let count = 0;
       let price = 0;
+      let len = buyData.value.length;
       val.forEach((item) => {
         count += item.count;
         price += item.count * item.price;
       });
       totleCount.value = count;
       totlePrice.value = price.toFixed(2);
+
+      buyData.value.splice(0, len);
+      val.forEach((item) => {
+        buyData.value.push({
+          jid: item.jid,
+          img: item.goods.img,
+          des: item.goods.des,
+          price: item.price,
+          count: computed(() => item.count),
+        });
+      });
     };
     const handtoggleAllSelection = (val) => {
       multipleTableRef.value.toggleAllSelection();
@@ -151,8 +188,8 @@ export default {
               type: "success",
               offset: 60,
             });
-            await holdUserInfo(store)
-            wrapper_getShopBus(store.getters.shopBus)
+            await holdUserInfo(store);
+            wrapper_getShopBus(store.getters.shopBus);
           },
           (err) => {
             ElMessage({
@@ -170,15 +207,14 @@ export default {
       dialogVisible.value = true;
       tempDelete.value = row.jid;
     };
-    const wrapper_getShopBus = (shopBus)=>{
-      tableData.value = []
+    const wrapper_getShopBus = (shopBus) => {
+      tableData.value = [];
       const params = {
         ids: JSON.stringify(Object.keys(shopBus)),
       };
       getShopBus(params).then(
         (res) => {
           if (Array.isArray(res) && res.length > 0) {
-            console.log(res)
             res.forEach((val, index) => {
               tableData.value.push({
                 goods: {
@@ -189,7 +225,7 @@ export default {
                 price: val.price.split("￥")[1],
                 count: 1,
                 operation: ["delete"],
-                curprice: 0
+                curprice: 0,
               });
             });
           }
@@ -198,10 +234,15 @@ export default {
           console.log(err);
         }
       );
-    }
+    };
     onBeforeMount(() => {
-      wrapper_getShopBus(store.getters.shopBus)
+      wrapper_getShopBus(store.getters.shopBus);
     });
+    const myrefresh = async ()=>{
+      multipleTableRef.value.clearSelection()
+      await holdUserInfo(store)
+      wrapper_getShopBus(store.getters.shopBus);
+    }
 
     return {
       multipleTableRef,
@@ -217,6 +258,10 @@ export default {
       shopBusDelete,
       dialogVisible,
       btnDelete,
+      buyBtn,
+      buyData,
+      dialogTableVisible,
+      myrefresh
     };
   },
 };
@@ -250,7 +295,6 @@ export default {
   position: relative;
   padding: 20px;
   margin-top: 20px;
-  width: 100%;
   border: 1px rgba(0, 0, 0, 0.1) solid;
   cursor: pointer;
   i {
