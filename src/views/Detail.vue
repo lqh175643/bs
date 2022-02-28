@@ -156,7 +156,8 @@ export default {
         detailAddBus({
           target: "shopBus",
           jid,
-          goodCount: count.value,
+          count: Number(count.value),
+          category
         }).then((res) => {
           ElMessage({
             message: "加入购物车成功",

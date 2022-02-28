@@ -11,7 +11,7 @@ export function detailAddBus(options){
   return instance({
     url:`/detail/operation`,
     method:'post',
-    params:options
+    data:options
   })
 }
 

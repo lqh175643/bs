@@ -16,51 +16,56 @@
       </el-tooltip>
     </template>
     <template v-else>
-      <span class="username">{{ '登录' }}</span>
+      <span class="username">{{ "登录" }}</span>
     </template>
   </div>
 </template>
 <script>
-import { useRouter } from 'vue-router'
-import { deleteUserInfo } from '../utils/util'
-import { useStore } from 'vuex'
-import { ElNotification } from 'element-plus'
+import { useRouter } from "vue-router";
+import { deleteUserInfo } from "../utils/util";
+import { useStore } from "vuex";
+import { ElNotification } from "element-plus";
+import { get_local_storage } from "../utils/storage";
 
 export default {
-  name: 'Login',
+  name: "Login",
   props: {
     username: {
       type: String,
-      default: ''
-    }
+      default: "",
+    },
   },
   setup(props) {
-    const router = useRouter()
-    const store = useStore()
+    const router = useRouter();
+    const store = useStore();
     const loginClick = function () {
+      const token = get_local_storage("token");
+      if (!token) {
+        router.push({
+          path: "/login",
+        });
+      }
+      return
+    };
+    const userHome = function () {
       router.push({
-        path: '/login'
-      })
-    }
-    const userHome = function(){
-      router.push({
-        path: '/userHome'
-      })
-    }
+        path: "/userHome",
+      });
+    };
     const logout = function () {
-      deleteUserInfo(store)
+      deleteUserInfo(store);
       ElNotification({
-        title: '退出成功',
-        type: 'success'
-      })
-    }
+        title: "退出成功",
+        type: "success",
+      });
+    };
     return {
       loginClick,
       logout,
-      userHome
-    }
-  }
-}
+      userHome,
+    };
+  },
+};
 </script>
 <style lang="scss" scoped>
 .main {
@@ -93,7 +98,7 @@ export default {
 .content_wrapper {
   cursor: pointer;
   font-size: 18px !important;
-  color: aqua;
+  color: black;
   div {
     margin: 5px 0;
   }

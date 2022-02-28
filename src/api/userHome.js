@@ -23,6 +23,14 @@ export function deleteUserInfoArr(options){
   })
 }
 
+export function deleteUserInfoArrObj(options){
+  return instance({
+    url:`/userInfo/deleteArrObj`,
+    method:'delete',
+    data:options
+  })
+}
+
 export function modifyUserInfo(options){
   return instance({
     url:`/userInfo/userinfo`,

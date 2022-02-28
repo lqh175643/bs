@@ -37,7 +37,7 @@ export default {
     const wrapper_getCollection = (footprint) => {
       tableData.value = [];
       const params = {
-        ids: JSON.stringify(footprint),
+        ids: footprint,
       };
       getShopBus(params).then(
         (res) => {

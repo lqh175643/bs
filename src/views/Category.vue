@@ -1,118 +1,119 @@
 <template>
   <CategoryBar @barChange="barChange" />
   <div class="goods" @click="goToDetail">
-    <div v-for="(item,index) in goodsDatas" :key="index" class="goods_item" >
+    <div v-for="(item, index) in goodsDatas" :key="index" class="goods_item">
       <Goods :goodsData="item" />
     </div>
   </div>
   <div class="block">
     <el-pagination
-      v-model:current-page="currentPage"
+      v-model:currentPage="query.page"
+      v-model:page-size="currentSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="totalCount"
       :page-sizes="[10, 20, 30, 50, 100]"
       :default-page-size="30"
-      :current-page="query.page"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-    ></el-pagination>
+    />
   </div>
 </template>
 <script>
-import { getCategoryData } from "../api/home"
-import { onBeforeMount, ref, reactive } from "vue"
+import { getCategoryData } from "../api/home";
+import { onBeforeMount, ref, reactive,computed } from "vue";
 
-import CategoryBar from "../components/CategoryBar.vue"
-import Goods from '../components/Goods.vue'
-import { useRouter } from 'vue-router'
+import CategoryBar from "../components/CategoryBar.vue";
+import Goods from "../components/Goods.vue";
+import { useRouter } from "vue-router";
 
 export default {
-  name: 'Detail',
+  name: "Detail",
   components: {
     CategoryBar,
-    Goods
+    Goods,
   },
   props: {
     category: {
       type: String,
-      default: ''
-    }
+      default: "",
+    },
   },
   setup(props) {
-    let query = reactive({
+    const query = reactive({
       page: 1,
-      limit: 30
-    })
-    let goodsDatas = ref([])
-    let url = window.location.href.split('?')[0].split('/').pop()
-    let totalCount = ref(null)
-    let currentPage = ref(1)
-    let router = useRouter()
+      limit: 30,
+    });
+    const goodsDatas = ref([]);
+    let url = window.location.href.split("?")[0].split("/").pop();
+    const totalCount = ref(0);
+    const currentPage = ref(1);
+    const router = useRouter();
+    const currentSize = ref(30)
     const handleSizeChange = function (e) {
-      query.limit = e
-      query.page = 1
-      getData(url, query)
-      goTop()
-    }
+      currentSize.value = e
+      query.limit = e;
+      query.page = 1;
+      getData(url, query);
+      goTop();
+    };
     const handleCurrentChange = function (e) {
-      query.page = e
-      getData(url, query)
-      goTop()
-    }
+      query.page = e;
+      getData(url, query);
+      goTop();
+    };
     const barChange = function (e) {
-      query.searchLimit = e
-      getData(url, query)
-    }
+      query.searchLimit = e;
+      getData(url, query);
+    };
     function getData(url, query) {
-      getCategoryData(url, query).then(res => {
-        totalCount.value = res.totalCount
-        console.log(res,1234)
-        goodsDatas.value = res.data
-      }).catch(err => {
-
-        console.log(err)
-      })
+      getCategoryData(url, query)
+        .then((res) => {
+          totalCount.value = Number(res.totalCount);
+          goodsDatas.value = res.data;
+        })
+        .catch((err) => {
+          throw err
+        });
     }
     function goTop() {
-      let timer = null
+      let timer = null;
       timer = setInterval(() => {
-        document.documentElement.scrollTop -= 500
-        if (document.documentElement.scrollTop <= 0){
-          clearInterval(timer)
-          timer = null
+        document.documentElement.scrollTop -= 500;
+        if (document.documentElement.scrollTop <= 0) {
+          clearInterval(timer);
+          timer = null;
         }
-      }, 50)
+      }, 50);
     }
-    const goToDetail = function(e){
-      let category = router.currentRoute.value.params.url
+    const goToDetail = function (e) {
+      let category = router.currentRoute.value.params.url;
       router.push({
-        path:`/detail/${category}/${e.target.dataset.id}`
-      })
-      
-    }
+        path: `/detail/${category}/${e.target.dataset.id}`,
+      });
+    };
     onBeforeMount(() => {
-      console.log(99999999999999)
-
-      getCategoryData(url, query).then(res => {
-        totalCount.value = res.totalCount
-        goodsDatas.value = res.data
-        console.log(goodsDatas)
-      }).catch(err => {
-        console.log(err)
-      })
-    })
+      getCategoryData(url, query)
+        .then((res) => {
+          totalCount.value = Number(res.totalCount);
+          goodsDatas.value = res.data;
+        })
+        .catch((err) => {
+          throw err
+        });
+    });
     return {
       totalCount,
       currentPage,
       handleSizeChange,
+      currentSize,
       handleCurrentChange,
       goodsDatas,
       barChange,
       query,
-      goToDetail
-    }
-  }
-}
+      goToDetail,
+    };
+  },
+};
 </script>
 <style lang="scss" scoped>
 .goods {

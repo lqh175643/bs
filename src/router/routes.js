@@ -54,6 +54,16 @@ export const routes = [
         meta: { title:"我的订单",icon:"" }
       },
       {
+        path:'/userHome/receiveorder',
+        component:()=>import("../views/UserHome/ReceiveOrder.vue"),
+        meta: { title:"待收货",icon:"" }
+      },
+      {
+        path:'/userHome/commitorder',
+        component:()=>import("../views/UserHome/CommitOrder.vue"),
+        meta: { title:"待评价",icon:"" }
+      },
+      {
         path:'/userHome/shopbus',
         component:()=>import("../views/UserHome/ShopBus.vue"),
         meta: { title:"购物车",icon:"" }

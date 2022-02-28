@@ -83,3 +83,10 @@ export const addrMap = {
   girlDormitory:['女生宿舍','舍'],
   academicBuilding:['教学楼','教']
 }
+export const starMap = {
+  1:'非常差',
+  2:'差',
+  3:'一般',
+  4:'好',
+  5:'非常好'
+}

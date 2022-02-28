@@ -207,6 +207,8 @@ export default {
             des: val.des,
             price: val.price,
             img: val.img,
+            category: val.category,
+            isComment:false
           };
         }),
         generateTime: Date.now(),
@@ -217,8 +219,7 @@ export default {
         receiveInfo: formData.receiveInfo,
         payMethod: formData.payMethod,
         isPay: true,
-        isReceive: false,
-        isComment: false,
+        isReceive: false
       }).then(
         () => {
           setTimeout(() => {

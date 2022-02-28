@@ -22,7 +22,7 @@ const store = createStore({
       return state.userInfo.username
     },
     shopBus:state=>{
-      return state.userInfo.shopBus || {}
+      return state.userInfo.shopBus || []
     },
     collection:state=>{
       return state.userInfo.collect || []

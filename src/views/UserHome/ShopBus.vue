@@ -92,7 +92,7 @@ import { useStore } from "vuex";
 import { onBeforeMount } from "vue";
 
 import Shoping from "../../components/Shoping.vue";
-import { getShopBus, deleteUserInfo } from "../../api/userHome";
+import { getShopBus, deleteUserInfoArrObj } from "../../api/userHome";
 import { holdUserInfo } from "../../utils/util";
 
 export default {
@@ -123,7 +123,6 @@ export default {
       dialogTableVisible.value = true;
     };
     const handleSelectionChange = (val) => {
-      console.log(123459)
       tempRows = val;
       let count = 0;
       let price = 0;
@@ -143,6 +142,7 @@ export default {
           des: item.goods.des,
           price: item.price,
           count: computed(() => item.count),
+          category: item.goods.category
         });
       });
     };
@@ -180,7 +180,7 @@ export default {
       return row.jid;
     };
     const shopBusDelete = () => {
-      deleteUserInfo({ jid: tempDelete.value, target: "shopBus" })
+      deleteUserInfoArrObj({ Ptarget:'shopBus', target: "jid",val:[tempDelete.value] })
         .then(
           async (res) => {
             ElMessage({
@@ -210,7 +210,7 @@ export default {
     const wrapper_getShopBus = (shopBus) => {
       tableData.value = [];
       const params = {
-        ids: JSON.stringify(Object.keys(shopBus)),
+        ids: shopBus.map((val)=>val.jid),
       };
       getShopBus(params).then(
         (res) => {
@@ -220,6 +220,7 @@ export default {
                 goods: {
                   img: val.imgUrl,
                   des: val.detail,
+                  category: shopBus[index].category
                 },
                 jid: val.id,
                 price: val.price.split("￥")[1],

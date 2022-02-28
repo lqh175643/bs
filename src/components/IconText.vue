@@ -18,6 +18,7 @@ export default {
   display: flex;
   flex-direction: column;
   font-size: 16px;
+  cursor: pointer;
   i {
     font-size: 25px;
     text-align: center;

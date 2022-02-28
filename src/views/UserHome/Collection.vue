@@ -56,7 +56,7 @@ export default {
     const wrapper_getCollection = (collection) => {
       tableData.value = [];
       const params = {
-        ids: JSON.stringify(collection),
+        ids: collection,
       };
       getShopBus(params).then(
         (res) => {

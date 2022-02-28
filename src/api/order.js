@@ -23,3 +23,19 @@ export function deleteOrder(options){
     data:options
   })
 }
+
+export function receiveOrder(options){
+  return instance({
+    url:'/order/receive',
+    method:'post',
+    data:options
+  })
+}
+
+export function commitOrder(options){
+  return instance({
+    url:'/order/commit',
+    method:'post',
+    data:options
+  })
+}

@@ -9,7 +9,7 @@
             alt="头像"
           />
           <span class="content_left_head_username">{{
-            username || "mdhawji"
+            store.getters.username || "mdhawji"
           }}</span>
           <div class="content_left_head_line"></div>
         </div>
@@ -28,18 +28,18 @@
                 <el-menu-item index="1-1" data-index="1-1">
                   <i class="iconfont icon-quanbudingdan"></i>全部订单
                 </el-menu-item>
-                <el-menu-item index="1-2" data-index="1-2">
+                <!-- <el-menu-item index="1-2" data-index="1-2">
                   <i class="iconfont icon-daifukuan"></i>待付款
-                </el-menu-item>
+                </el-menu-item> -->
                 <el-menu-item index="1-3" data-index="1-3">
                   <i class="iconfont icon-daishouhuo"></i>待收货
                 </el-menu-item>
                 <el-menu-item index="1-4" data-index="1-4">
                   <i class="iconfont icon-daipingjia"></i>待评价
                 </el-menu-item>
-                <el-menu-item index="1-5" data-index="1-5">
+                <!-- <el-menu-item index="1-5" data-index="1-5">
                   <i class="iconfont icon-tuikuantuihuo"></i>退款退货
-                </el-menu-item>
+                </el-menu-item> -->
               </el-menu-item-group>
             </el-sub-menu>
             <el-menu-item index="2" data-index="2">
@@ -71,7 +71,7 @@
         </div>
       </div>
       <div class="content_right">
-        <Search />
+        <!-- <Search /> -->
         <div class="goHome" @click="goHome">
           <IconText
             text="首页"
@@ -115,6 +115,22 @@ export default {
           case "1-1":
             router.push({
               path: "/userHome/order",
+              params: {
+                uid,
+              },
+            });
+            break;
+          case "1-3":
+            router.push({
+              path: "/userHome/receiveorder",
+              params: {
+                uid,
+              },
+            });
+            break;
+          case "1-4":
+            router.push({
+              path: "/userHome/commitorder",
               params: {
                 uid,
               },
@@ -165,6 +181,7 @@ export default {
         }
       }
     };
+
     const tableData = [
       {
         goods: {
@@ -200,6 +217,7 @@ export default {
       tableData,
       itemClick,
       goHome,
+      store
     };
   },
 };

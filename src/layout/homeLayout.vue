@@ -17,6 +17,7 @@
         :text="item.text"
         :icon="item.icon"
         class="tab_bar_icon"
+        @click.native="changePath(item.path)"
       ></IconText>
     </template>
     <Login :username="store.getters.username" class="login"></Login>
@@ -46,8 +47,8 @@ export default {
     const router = useRouter();
     let tabbar_icon_text = [
       { text: "消息", icon: "icon-31daipingjia" },
-      { text: "收藏", icon: "icon-shoucang" },
-      { text: "购物车", icon: "icon-gouwuche" },
+      { text: "收藏", icon: "icon-shoucang", path: "/userHome/collection" },
+      { text: "购物车", icon: "icon-gouwuche", path: "/userHome/shopbus" },
     ];
     let home_btn = [{ text: "首页", icon: "icon-zhuye" }];
     const goHome = function () {
@@ -55,8 +56,14 @@ export default {
         path: "/",
       });
     };
+    const changePath = (path) => {
+      router.push({
+        path
+      });
+    };
     return {
       goHome,
+      changePath,
       tabbar_icon_text,
       home_btn,
       store,
@@ -79,9 +86,13 @@ export default {
   .search {
     width: 30%;
     margin-right: 10px;
+    position: relative;
+    left: 25px;
   }
   .tab_bar_icon {
     margin: 0 8px;
+    position: relative;
+    left:25px;
   }
   .login {
     position: relative;
