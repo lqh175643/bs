@@ -1,6 +1,6 @@
 <template>
   <CategoryBar @barChange="barChange" />
-  <div class="goods" @click="goToDetail">
+  <div class="goods">
     <div v-for="(item, index) in goodsDatas" :key="index" class="goods_item">
       <Goods :goodsData="item" />
     </div>
@@ -85,12 +85,6 @@ export default {
         }
       }, 50);
     }
-    const goToDetail = function (e) {
-      let category = router.currentRoute.value.params.url;
-      router.push({
-        path: `/detail/${category}/${e.target.dataset.id}`,
-      });
-    };
     onBeforeMount(() => {
       getCategoryData(url, query)
         .then((res) => {
@@ -109,8 +103,7 @@ export default {
       handleCurrentChange,
       goodsDatas,
       barChange,
-      query,
-      goToDetail,
+      query
     };
   },
 };

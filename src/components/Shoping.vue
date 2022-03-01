@@ -101,6 +101,7 @@ import { _addrMap } from "../utils/util";
 import { ElMessage, ElLoading } from "element-plus";
 import Coupon from "../components/Coupon.vue";
 import { generateOrder } from "../api/order";
+import { holdUserInfo } from "../utils/util";
 export default {
   name: "Shoping",
   components: {
@@ -198,7 +199,6 @@ export default {
         text: "订单生成中",
         background: "rgba(0, 0, 0, 0.7)",
       });
-      console.log(buyData);
       generateOrder({
         goods: buyData.map((val) => {
           return {
@@ -231,6 +231,7 @@ export default {
               offset: 60,
             });
           }, 1000);
+          holdUserInfo(store)
           cxt.emit("myrefresh");
         },
         (err) => {

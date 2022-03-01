@@ -7,3 +7,19 @@ export function login(options){
     data:options
   })
 }
+
+export function forget(options){
+  return instance({
+    url:'/forget',
+    method:'post',
+    data:options
+  })
+}
+
+export function modifyUserpass(options){
+  return instance({
+    url:'/modifyUserpass',
+    method:'post',
+    data:options
+  })
+}

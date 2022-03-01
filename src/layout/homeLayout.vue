@@ -1,7 +1,7 @@
 <template>
   <div class="top_bar">
     <div class="top_bar_head">
-      <template v-for="item in home_btn">
+      <template v-for="(item,index) in home_btn" :key="index">
         <div class="goHome" @click="goHome">
           <IconText
             :text="item.text"
@@ -12,15 +12,15 @@
       </template>
     </div>
     <Search class="search"></Search>
-    <template v-for="item in tabbar_icon_text">
+    <template v-for="(item,index) in tabbar_icon_text" :key="index">
       <IconText
         :text="item.text"
         :icon="item.icon"
         class="tab_bar_icon"
-        @click.native="changePath(item.path)"
+        @click="changePath(item.path)"
       ></IconText>
     </template>
-    <Login :username="store.getters.username" class="login"></Login>
+    <Login :username="store.getters.username" class="login_icon"></Login>
   </div>
   <div class="router_view_wrapper">
     <div class="router_view">
@@ -87,16 +87,17 @@ export default {
     width: 30%;
     margin-right: 10px;
     position: relative;
-    left: 25px;
+    left: 50px;
   }
   .tab_bar_icon {
     margin: 0 8px;
     position: relative;
-    left:25px;
+    left:50px;
+    font-size: 20px;
   }
-  .login {
+  .login_icon {
     position: relative;
-    left: 106px;
+    left: 120px;
   }
 }
 .router_view_wrapper {

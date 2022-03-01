@@ -28,7 +28,7 @@
           <el-input v-model="ruleForm.pass2" type="password" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
-      <div class="login_btn" @click="submitForm">注&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp册</div>
+      <div class="login_btn" @click="submitForm">注&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;册</div>
       <div class="login_form_line"></div>
       <div class="register" @click="login">已有帐号？登录</div>
     </div>

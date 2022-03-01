@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div v-for="item in data" class="cate-item" :data-myset="item.value" @click="getData">
+    <div v-for="(item,index) in data" class="cate-item" :key="index" :data-myset="item.value" @click="getData">
       <img :src="item.src" alt />
       <p>{{ item.title }}</p>
     </div>

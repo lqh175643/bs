@@ -5,7 +5,9 @@
       <img class="loginBg" src="../assets/loginBg.jpg" alt="登录背景" />
     </div>
     <div class="login_form">
-      <div class="login_form_header">欢迎登录</div>
+      <div class="login_form_header">
+        {{ isForget ? "密码重置" : "欢迎登陆" }}
+      </div>
       <div class="login_form_line"></div>
       <el-form
         ref="ruleFormRef"
@@ -16,21 +18,40 @@
         class="demo-ruleForm"
       >
         <el-form-item label="用户名" prop="user">
-          <el-input v-model="ruleForm.user" placeholder="用户名/手机号" autocomplete="off"></el-input>
+          <el-input
+            v-model="ruleForm.user"
+            placeholder="用户名"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="pass">
-          <el-input v-model="ruleForm.pass" type="password" autocomplete="off"></el-input>
+        <el-form-item label="密码" v-if="!isForget" prop="pass">
+          <el-input
+            v-model="ruleForm.pass"
+            type="password"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" v-else prop="phone">
+          <el-input
+            v-model="ruleForm.phone"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
       </el-form>
-      <div class="login_btn" @click="submitForm">登&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp录</div>
+
+      <p class="login_btn" v-if="isForget" @click="forgetForm">重置</p>
+      <p class="login_btn" v-else @click="submitForm">登录</p>
       <div class="login_form_line"></div>
-      <div class="register" @click="register">立即注册</div>
+      <span class="forget" @click="isForget = !isForget">{{
+        isForget ? "立即登录" : "密码重置"
+      }}</span>
+      <span class="register" @click="register">立即注册</span>
     </div>
   </div>
 </template>
 <script>
 import { ref, onMounted, reactive } from 'vue';
-import { login } from '../api/login'
+import { login,forget } from '../api/login'
 import { useRouter } from 'vue-router'
 
 import { ElNotification } from 'element-plus'
@@ -45,7 +66,9 @@ export default {
     const ruleForm = reactive({
       user: '',
       pass: '',
+      phone:''
     })
+    const isForget = ref(false)
     function submitForm() {
       ruleFormRef.value.validate((valid) => {
         if (valid) {
@@ -79,6 +102,28 @@ export default {
         }
       })
     }
+    function forgetForm() {
+      ruleFormRef.value.validate((valid) => {
+        if (valid) {
+          const param = {
+            user: ruleForm.user,
+            phone: window.btoa(ruleForm.phone)
+          }
+          forget(param).then(res => {
+              ElNotification({
+                title: '重置成功',
+                message: res.mes,
+                type: 'success'
+              })
+          }, err => {
+            console.log(err)
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    }
     const validatePass = (rule, value, callback) => {
       // ruleForm.pass = ''
       if (value === '') {
@@ -96,6 +141,15 @@ export default {
         callback()
       }
     }
+    const validatePhone = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入手机号'))
+      } else if (ruleForm.user === '') {
+        callback(new Error('请先输入用户名'))
+      } else {
+        callback()
+      }
+    }
     const register = function () {
       router.push({
         path: `/register`
@@ -105,11 +159,14 @@ export default {
       ruleForm,
       rules: {
         user: [{ validator: validatePass, trigger: 'change' }],
-        pass: [{ validator: validatePass2, trigger: 'change' }]
+        pass: [{ validator: validatePass2, trigger: 'change' }],
+        phone:[{ validator: validatePhone, trigger: 'change' }]
       },
       ruleFormRef,
       submitForm,
-      register
+      forgetForm,
+      register,
+      isForget
     }
   }
 }
@@ -117,6 +174,7 @@ export default {
 <style lang="scss" scoped>
 .login_wrapper {
   margin-top: 0px !important;
+  overflow: hidden;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -149,7 +207,7 @@ export default {
     }
   }
   .login_form {
-    background-color: rgba(255,255,255,0.6);
+    background-color: rgba(255, 255, 255, 0.6);
     width: 435px;
     height: 352px;
     display: flex;
@@ -179,18 +237,24 @@ export default {
       margin-top: 10px;
       margin-bottom: 20px;
       font-size: 20px;
+      letter-spacing: 20px;
       font-weight: bold;
       color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      line-height: 40px;
+      text-align: center;
       height: 40px;
       background-color: #e4393c;
       width: 80%;
     }
-    .register {
+    .forget {
+      cursor: pointer;
       position: relative;
       top: 10px;
+      right: 142px;
+    }
+    .register {
+      position: relative;
+      bottom: 12px;
       left: 142px;
       cursor: pointer;
     }

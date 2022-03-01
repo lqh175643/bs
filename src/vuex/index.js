@@ -3,7 +3,8 @@ const store = createStore({
   state() {
     return {
       count: 0,
-      userInfo:{}
+      userInfo:{},
+      clientHeight:document.documentElement.clientHeight
     };
   },
   mutations: {
@@ -44,6 +45,9 @@ const store = createStore({
     },
     shopHistory:state=>{
       return state.userInfo.shopHistory || []
+    },
+    clientHeight:state=>{
+      return state.clientHeight || 0
     }
   },
   actions: {},

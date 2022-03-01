@@ -1,23 +1,23 @@
 <template>
   <div class="middle">
     <div class="middle_left">
-      <template v-for="item in 100">
-        <Goods></Goods>
-      </template>
+      <div v-for="(item, index) in left_datas" :key="index">
+        <Goods :goodsData="item" />
+      </div>
     </div>
     <div class="middle_middle">
       <Swiper class="swiper"></Swiper>
       <Category class="category"></Category>
       <div class="middle_goods">
-        <div class="item" v-for="item in 100">
-          <Goods></Goods>
+        <div class="item" v-for="(item, index) in middle_datas" :key="index">
+          <Goods :goodsData="item" />
         </div>
       </div>
     </div>
     <div class="middle_right">
-      <template v-for="item in 100">
-        <Goods></Goods>
-      </template>
+      <div v-for="(item, index) in right_datas" :key="index">
+        <Goods :goodsData="item" />
+      </div>
     </div>
   </div>
   <div class="setting-side" @click="drawer = !drawer">
@@ -29,7 +29,7 @@
     <div class="drawer_body">
       <span class="font_color">文字主题颜色</span>
       <el-color-picker v-model="color" show-alpha @change="colorChange" />
-      <p style="margin-top: 10px;" class="bg_theme">主题背景</p>
+      <p style="margin-top: 10px" class="bg_theme">主题背景</p>
       <div class="bg_img" @click="bgChange">
         <img src="../assets/bg-1.jpg" alt />
         <img src="../assets/bg-2.jpg" alt />
@@ -40,52 +40,92 @@
   </el-drawer>
 </template>
 <script>
-import Search from '../components/Search.vue'
-import IconText from '../components/IconText.vue'
-import Login from '../components/Login.vue'
-import Swiper from '../components/Swiper.vue'
-import Goods from '../components/Goods.vue'
-import Category from '../components/Category.vue'
+import Search from "../components/Search.vue";
+import IconText from "../components/IconText.vue";
+import Login from "../components/Login.vue";
+import Swiper from "../components/Swiper.vue";
+import Goods from "../components/Goods.vue";
+import Category from "../components/Category.vue";
 
-import { reactive, ref, onBeforeMount } from 'vue';
-import { useStore } from 'vuex'
+import { reactive, ref, onBeforeMount } from "vue";
+import { useStore } from "vuex";
 
-import { changeTheme } from '../utils'
-import { holdUserInfo } from '../utils/util'
+import { changeTheme } from "../utils";
+import { holdUserInfo } from "../utils/util";
+import { getCategoryData } from "../api/home";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
     Search,
     IconText,
     Login,
     Swiper,
     Goods,
-    Category
+    Category,
   },
   setup(props) {
-    const store = useStore()
-    let drawer = ref(false)
-    let color = ref('rgba(19, 206, 102, 0.8)')
-    let bgChange = function (event) {
-      console.log(event.target.src)
-      document.body.style.background = `url(${event.target.src}) no-repeat top`
-    }
-    let colorChange = function () {
-      changeTheme(color.value)
-    }
+    const store = useStore();
+    const totalCount = ref(-1)
+    const query = reactive({
+      page: 1,
+      limit: 32,
+    });
+    const left_datas = ref([]);
+    const right_datas = ref([]);
+    const middle_datas = ref([]);
+    const drawer = ref(false);
+    let color = ref("rgba(19, 206, 102, 0.8)");
+    const bgChange = function (event) {
+      document.body.style.background = `url(${event.target.src}) no-repeat top`;
+    };
+    const colorChange = function () {
+      changeTheme(color.value);
+    };
+    const scrollGet = (e) => {
+      console.log(1234);
+    };
+    const getData = () => {
+      if(totalCount.value!=-1 && query.page*query.limit >= totalCount.value) return
+      getCategoryData("allCategory", query).then((res) => {
+        const once = middle_datas.value.length?false:true
+        totalCount.value = res.totalCount;
+        const data = res.data || [];
+        const count = data.length;
+        const remainder = count % 4;
+        const multiple = (count - remainder - (once?4:0)) / 4;
+        left_datas.value.push(...data.splice(0, multiple + (once ? 2 : 0)));
+        middle_datas.value.push(...data.splice(0, 2 * multiple));
+        right_datas.value.push(...data.splice(0, multiple + (once ? 2 : 0)));
+        left_datas.value.push(...data.splice(0, 1));
+        middle_datas.value.push(...data.splice(0, 2));
+      });
+    };
+    addEventListener("scroll", (e) => {
+      if (
+        store.getters.clientHeight + document.documentElement.scrollTop - 60 >=
+        document.body.scrollHeight
+      ) {
+        query.page += 1;
+        getData();
+      }
+    });
     onBeforeMount(() => {
-      holdUserInfo(store)
-      console.log(store)
-    })
+      holdUserInfo(store);
+      getData();
+    });
     return {
       drawer,
       color,
       bgChange,
-      colorChange
-    }
-  }
-}
+      colorChange,
+      left_datas,
+      middle_datas,
+      right_datas,
+      scrollGet,
+    };
+  },
+};
 </script>
 <style lang="scss" scoped>
 .drawer_body {

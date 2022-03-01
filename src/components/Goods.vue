@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" :style="{ 'height': height + 'px' }">
+  <div class="wrapper" :style="{ 'height': height + 'px' }" @click="goDetail">
     <img :src="goodsData.imgUrl" :data-id="goodsData.id" alt />
     <div class="detail">
       <TextHide :count="20" class="margin_top_10 text" :text="goodsData.detail" />
@@ -12,6 +12,7 @@
 </template>
 <script>
 import TextHide from "./TextHide.vue"
+import { useRouter } from "vue-router";
 export default {
   name: 'Goods',
   components:{
@@ -32,6 +33,17 @@ export default {
           sale:'222'
         }
       }
+    }
+  },
+  setup(props,cxt){
+    const router = useRouter();
+    const goDetail = ()=>{
+      router.push({
+        path: `/detail/${props.goodsData.category}/${props.goodsData.id}`,
+      });
+    }
+    return {
+      goDetail
     }
   }
 }
