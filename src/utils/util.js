@@ -36,6 +36,7 @@ function _addrMap(val){
 }
 
 function formatDate(val) {
+  if(!val) return
   const date = new Date(val);
   const YY = date.getFullYear() + '-';
   const MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
@@ -45,10 +46,18 @@ function formatDate(val) {
   const ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
   return YY + MM + DD +" "+hh + mm + ss;
 }
+
+function hideName(val){
+  val = val+''
+  const len = val.length
+  if(!len) return
+  return val.slice(0,3)+'*****'+val.slice(-3)
+}
 export {
   str_parse,
   holdUserInfo,
   deleteUserInfo,
   _addrMap,
-  formatDate
+  formatDate,
+  hideName
 }

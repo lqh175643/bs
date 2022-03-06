@@ -116,6 +116,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    propReceive:{
+      type: Number,
+      default: ''
+    }
   },
   emits: ["shopClose", "myrefresh"],
   setup(props, cxt) {
@@ -155,7 +159,7 @@ export default {
     });
 
     const formData = reactive({
-      receiveInfo: "",
+      receiveInfo: props.propReceive,
       payMethod: "微信",
       consumerCoupon: "",
       campusBean: 0,

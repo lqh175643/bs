@@ -5,7 +5,7 @@
       :key="item"
       :class="[
         'iconfont',
-        'icon-aixin1',
+        'icon-aixin',
         'star_icon',
         score >= item ? 'active_star' : 'inactive_star',
       ]"

@@ -22,3 +22,19 @@ export function detailShoucang(options){
     data:options
   })
 }
+
+export function commitZan(options){
+  return instance({
+    url:`/detail/commitZan`,
+    method:'post',
+    data:options
+  })
+}
+
+export function commitChd(options){
+  return instance({
+    url:`/detail/commitChd`,
+    method:'post',
+    data:options
+  })
+}

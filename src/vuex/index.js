@@ -19,6 +19,9 @@ const store = createStore({
     userInfo:state=>{
       return state.userInfo
     },
+    userId:state=>{
+      return state.userInfo.id
+    },
     username:state=>{
       return state.userInfo.username
     },

@@ -77,7 +77,7 @@ export default {
     const drawer = ref(false);
     let color = ref("rgba(19, 206, 102, 0.8)");
     const bgChange = function (event) {
-      document.body.style.background = `url(${event.target.src}) no-repeat top`;
+      document.body.style.backgroundImage = `url(${event.target.src})`;
     };
     const colorChange = function () {
       changeTheme(color.value);

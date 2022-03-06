@@ -55,13 +55,14 @@ export default {
   cursor: pointer;
   width: 200px;
   img {
+    opacity: 1;
     height: 70%;
     width: 100%;
     border-radius: 10px 10px 0 0;
   }
   .detail {
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, .7);
     border-radius: 0 0 10px 10px;
     width: 100%;
     height: 30%;

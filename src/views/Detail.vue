@@ -17,7 +17,7 @@
         <span class="address-select">
           <el-select v-model="address_value" placeholder="Select">
             <el-option
-              v-for="item in options"
+              v-for="item in receiveInfo"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -31,7 +31,7 @@
         <span class="margin-right-10">数&nbsp;&nbsp;量</span>
         <span class="counter">
           <el-input-number
-            v-model="count"
+            v-model="buyData.count"
             :min="1"
             :max="10"
             @change="handleChange"
@@ -91,15 +91,26 @@
     </div>
     <div class="commit" v-else>
       <div
-        v-for="(item, index) in detailData.comment"
+        v-for="(item, index) in detailDataComment"
         :key="index"
         class="commit_item"
       >
-        <Commit :commentData="item" />
+        <Commit
+          :commentData="item"
+          :jid="jid"
+          :category="category"
+          @refresh="commitRefresh"
+        />
       </div>
     </div>
   </div>
-  <Shoping :dialogTableVisible="dialogTableVisible" :buyData="buyData" @shopClose="dialogTableVisible=false"/>
+  <Shoping
+    v-if="dialogTableVisible"
+    :dialogTableVisible="dialogTableVisible"
+    :buyData="buyData"
+    :propReceive="address_value"
+    @shopClose="dialogTableVisible = false"
+  />
 </template>
 <script>
 import { useRouter } from "vue-router";
@@ -114,7 +125,7 @@ import Commit from "../components/Commit.vue";
 import Shoping from "../components/Shoping.vue";
 import { ElMessage } from "element-plus";
 import { footprint } from "../api/home";
-import { holdUserInfo } from "../utils/util";
+import { holdUserInfo, _addrMap } from "../utils/util";
 export default {
   name: "Detail",
   components: {
@@ -126,21 +137,34 @@ export default {
   setup(props) {
     const route = useRouter();
     const store = useStore();
-    let dialogTableVisible = ref(false);
-    let id = route.currentRoute.value.params.id;
-    let category = route.currentRoute.value.params.category;
-    let detailData = ref({});
-    let address_value = ref("");
-    let header_item_index = ref(0);
+    const dialogTableVisible = ref(false);
+    const id = route.currentRoute.value.params.id;
+    const category = route.currentRoute.value.params.category;
+    const detailData = ref({});
+    const address_value = ref("");
+    const header_item_index = ref(0);
     const options = { id, category };
-    let count = ref(1);
+    const count = ref(1);
+    const proPic = ref([]);
     const buyData = reactive({
-      img:'',
-      des:'',
-      price:'',
-      jid:id,
-      count:count.value
-    })
+      img: "",
+      des: "",
+      price: "",
+      jid: id,
+      count: 1,
+    });
+    const addrs = store.getters.receivingAddress;
+    const receiveInfo = addrs.map((addr) => {
+      return {
+        value: addr.addr_id,
+        label:
+          addr.user +
+          " " +
+          _addrMap(addr.receivingAddress) +
+          " " +
+          addr.phoneNumber,
+      };
+    });
     const handleChange = function () {};
     const headerChange = function (e) {
       if (e.target !== e.currentTarget) {
@@ -148,7 +172,7 @@ export default {
       }
     };
     const buy = function () {
-      dialogTableVisible.value = true
+      dialogTableVisible.value = true;
     };
     const addBus = function () {
       const jid = detailData.value.id;
@@ -157,7 +181,7 @@ export default {
           target: "shopBus",
           jid,
           count: Number(count.value),
-          category
+          category,
         }).then((res) => {
           ElMessage({
             message: "加入购物车成功",
@@ -188,9 +212,9 @@ export default {
       getDetail(options)
         .then((res) => {
           detailData.value = res;
-          buyData.img = res.images[0].replace('/n5/','/n1/')
-          buyData.des = res.productDescription
-          buyData.price = res.price
+          buyData.img = res.images[0].replace("/n5/", "/n1/");
+          buyData.des = res.productDescription;
+          buyData.price = res.price;
           const jid = detailData.value.id;
           return Promise.resolve(jid);
         })
@@ -206,16 +230,27 @@ export default {
           }
         );
     });
-    let goodsCount = computed(() => {
+    const goodsCount = computed(() => {
       return `(${detailData.value.comment?.length >= 10 ? "10+" : ""})`;
     });
-    let proPic = ref([]);
+    const detailDataComment = computed(() => {
+      return detailData.value.comment;
+    });
     watch(
       () => detailData.value.introductionPicture,
       () => {
         proPic.value = urlFilter(detailData.value.introductionPicture);
       }
     );
+    const commitRefresh = () => {
+      getDetail(options)
+        .then((res) => {
+          detailData.value.comment = res.comment;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
     return {
       dialogTableVisible,
       detailData,
@@ -229,29 +264,12 @@ export default {
       proPic,
       shoucang,
       buy,
+      detailDataComment,
       buyData,
-      options: ref([
-        {
-          value: "Option1",
-          label: "Option1",
-        },
-        {
-          value: "Option2",
-          label: "Option2",
-        },
-        {
-          value: "Option3",
-          label: "Option3",
-        },
-        {
-          value: "Option4",
-          label: "Option4",
-        },
-        {
-          value: "Option5",
-          label: "Option5",
-        },
-      ]),
+      jid: id,
+      category,
+      commitRefresh,
+      receiveInfo,
     };
   },
 };
@@ -262,11 +280,11 @@ export default {
   line-height: 32px;
   .el-input-number__decrease {
     width: 30px;
-    height: 30px;
+    height: 28px;
   }
   .el-input-number__increase {
     width: 30px;
-    height: 30px;
+    height: 28px;
   }
   .el-input {
     line-height: 0;
@@ -279,7 +297,10 @@ export default {
   margin-right: 10px;
 }
 .detail_wrapper {
+  // border-radius: 5px 5px 0 0;
+  background-color: rgba(255,255,255,0.6);
   margin-top: 30px;
+  padding-bottom: 30px;
   display: flex;
   .left_swiper {
     flex: 8;
@@ -323,6 +344,7 @@ export default {
       }
       .el-input__inner {
         height: 30px;
+        width: 300px;
       }
     }
     .count {
@@ -370,9 +392,9 @@ export default {
   }
 }
 .picture_and_comment {
-  margin-top: 40px;
+  // margin-top: 40px;
   height: 50px;
-  background-color: rgb(247, 247, 247);
+  background-color: rgb(255, 255, 255,0.8);
   border-bottom: 1px red solid;
   .picture {
     margin-top: 20px;
