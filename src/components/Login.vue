@@ -217,6 +217,9 @@ export default {
   cursor: pointer;
   display: flex;
   align-items: center;
+  background-color: $mybgc6;
+  padding: 4px;
+  border-radius: 8px;
   .wrapper {
     width: 60px;
     height: 60px;

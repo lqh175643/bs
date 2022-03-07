@@ -85,9 +85,9 @@
       </div>
     </div>
     <div class="picture" v-if="header_item_index == 0">
-      <div v-for="(item, index) in proPic" :key="index">
+      <template v-for="(item, index) in proPic" :key="index">
         <img :src="item" alt />
-      </div>
+      </template>
     </div>
     <div class="commit" v-else>
       <div
@@ -298,9 +298,10 @@ export default {
 }
 .detail_wrapper {
   // border-radius: 5px 5px 0 0;
-  background-color: rgba(255,255,255,0.6);
+  background-color: $mybgc8;
   margin-top: 30px;
-  padding-bottom: 30px;
+  padding: 30px 30px;
+  border-radius: 8px 8px 0 0;
   display: flex;
   .left_swiper {
     flex: 8;
@@ -394,7 +395,7 @@ export default {
 .picture_and_comment {
   // margin-top: 40px;
   height: 50px;
-  background-color: rgb(255, 255, 255,0.8);
+  background-color: rgb(255, 255, 255, 0.8);
   border-bottom: 1px red solid;
   .picture {
     margin-top: 20px;
@@ -402,8 +403,9 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
     img {
-      width: 750px;
+      width: 100%;
     }
   }
   .commit {

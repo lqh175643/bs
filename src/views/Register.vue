@@ -176,7 +176,7 @@ export default {
     }
   }
   .login_form {
-    background-color: rgba(255,255,255,.6);
+    background-color: $mybgc6;
     width: 435px;
     height: 455px;
     display: flex;

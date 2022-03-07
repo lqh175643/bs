@@ -52,8 +52,7 @@ export default {
 <style lang="scss" scoped>
 .wrapper {
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
-  background-color: rgba(255,255,255,0.7);
-  background-color: #fff;
+  background-color: $mybgc8;
   border-radius: 5%;
   width: 600px;
   height: 300px;

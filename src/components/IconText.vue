@@ -18,6 +18,10 @@ export default {
   display: flex;
   flex-direction: column;
   font-size: 16px;
+  background-color: $mybgc6;
+  padding: 4px;
+  border-radius: 8px;
+  // box-sizing: content-box;
   cursor: pointer;
   i {
     font-size: 25px;

@@ -133,7 +133,6 @@ export default {
   font-family: simsun;
 }
 .table_wrapper {
-  margin-top: 30px;
   .goods_wrapper {
     display: flex;
     img {

@@ -7,6 +7,7 @@ import 'element-plus/dist/index.css'
 import './assets/icon.css'
 import './assets/index.css'
 import './utils/init.js'
+// import './assets/mixin.scss'
 
 import store from './vuex/index'
 

@@ -104,7 +104,7 @@ export default {
   display: flex;
   justify-content: center;
   .router_view {
-    width: 1000px;
+    width: 1080px;
   }
 }
 </style>

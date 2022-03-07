@@ -34,7 +34,11 @@
         <img src="../assets/bg-1.jpg" alt />
         <img src="../assets/bg-2.jpg" alt />
         <img src="../assets/bg-3.jpg" alt />
-        <img src="../assets/bg-3.jpg" alt />
+        <img src="../assets/bg-4.jpg" alt />
+        <img src="../assets/bg-5.jpg" alt />
+        <img src="../assets/bg-6.jpg" alt />
+        <img src="../assets/bg-7.jpg" alt />
+        <img src="../assets/bg-8.jpg" alt />
       </div>
     </div>
   </el-drawer>
