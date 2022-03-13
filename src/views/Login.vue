@@ -1,9 +1,9 @@
 <template>
   <div class="login_wrapper">
-    <div class="top_notice">欢迎登录！注册即领取优惠券</div>
-    <div class="loginBg_wrapper">
-      <img class="loginBg" src="../assets/loginBg.jpg" alt="登录背景" />
-    </div>
+    <!-- <div class="top_notice">欢迎登录！注册即领取优惠券</div> -->
+    <!-- <div class="loginBg_wrapper">
+      <img src="../assets/loginBg.jpg" alt="登录背景" />
+    </div> -->
     <div class="login_form">
       <div class="login_form_header">
         {{ isForget ? "密码重置" : "欢迎登陆" }}
@@ -32,10 +32,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="手机号" v-else prop="phone">
-          <el-input
-            v-model="ruleForm.phone"
-            autocomplete="off"
-          ></el-input>
+          <el-input v-model="ruleForm.phone" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
 
@@ -50,126 +47,132 @@
   </div>
 </template>
 <script>
-import { ref, onMounted, reactive } from 'vue';
-import { login,forget } from '../api/login'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, reactive } from "vue";
+import { login, forget } from "../api/login";
+import { useRouter } from "vue-router";
 
-import { ElNotification } from 'element-plus'
+import { ElNotification } from "element-plus";
 
-import { set_local_storage } from '../utils/storage'
+import { set_local_storage } from "../utils/storage";
 
 export default {
-  name: 'Login',
+  name: "Login",
   setup(props) {
-    const router = useRouter()
-    const ruleFormRef = ref()
+    const router = useRouter();
+    const ruleFormRef = ref();
     const ruleForm = reactive({
-      user: '',
-      pass: '',
-      phone:''
-    })
-    const isForget = ref(false)
+      user: "",
+      pass: "",
+      phone: "",
+    });
+    const isForget = ref(false);
     function submitForm() {
       ruleFormRef.value.validate((valid) => {
         if (valid) {
           const param = {
             user: ruleForm.user,
-            pass: window.btoa(ruleForm.pass)
-          }
-          login(param).then(res => {
-            if (res.code == 1) {
-              if (res.token) {
-                set_local_storage('token', res.token)
+            pass: window.btoa(ruleForm.pass),
+          };
+          login(param).then(
+            (res) => {
+              if (res.code == 1) {
+                if (res.token) {
+                  set_local_storage("token", res.token);
+                } else {
+                  throw "获取token失败";
+                }
+                router.push({
+                  path: "/home",
+                });
               } else {
-                throw '获取token失败'
+                ElNotification({
+                  title: "登录失败",
+                  message: res.mes,
+                  type: "warning",
+                });
               }
-              router.push({
-                path: '/home'
-              })
-            } else {
-              ElNotification({
-                title: '登录失败',
-                message: res.mes,
-                type: 'warning'
-              })
+            },
+            (err) => {
+              console.log(err);
             }
-          }, err => {
-            console.log(err)
-          })
+          );
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     }
     function forgetForm() {
       ruleFormRef.value.validate((valid) => {
         if (valid) {
           const param = {
             user: ruleForm.user,
-            phone: window.btoa(ruleForm.phone)
-          }
-          forget(param).then(res => {
+            phone: window.btoa(ruleForm.phone),
+          };
+          forget(param).then(
+            (res) => {
               ElNotification({
-                title: '重置成功',
+                title: "重置成功",
                 message: res.mes,
-                type: 'success'
-              })
-          }, err => {
-            console.log(err)
-          })
+                type: "success",
+              });
+            },
+            (err) => {
+              console.log(err);
+            }
+          );
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     }
     const validatePass = (rule, value, callback) => {
       // ruleForm.pass = ''
-      if (value === '') {
-        callback(new Error('请输入用户名'))
+      if (value === "") {
+        callback(new Error("请输入用户名"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'))
-      } else if (ruleForm.user === '') {
-        callback(new Error('请先输入用户名'))
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else if (ruleForm.user === "") {
+        callback(new Error("请先输入用户名"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePhone = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入手机号'))
-      } else if (ruleForm.user === '') {
-        callback(new Error('请先输入用户名'))
+      if (value === "") {
+        callback(new Error("请输入手机号"));
+      } else if (ruleForm.user === "") {
+        callback(new Error("请先输入用户名"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const register = function () {
       router.push({
-        path: `/register`
-      })
-    }
+        path: `/register`,
+      });
+    };
     return {
       ruleForm,
       rules: {
-        user: [{ validator: validatePass, trigger: 'change' }],
-        pass: [{ validator: validatePass2, trigger: 'change' }],
-        phone:[{ validator: validatePhone, trigger: 'change' }]
+        user: [{ validator: validatePass, trigger: "change" }],
+        pass: [{ validator: validatePass2, trigger: "change" }],
+        phone: [{ validator: validatePhone, trigger: "change" }],
       },
       ruleFormRef,
       submitForm,
       forgetForm,
       register,
-      isForget
-    }
-  }
-}
+      isForget,
+    };
+  },
+};
 </script>
 <style lang="scss" scoped>
 .login_wrapper {
@@ -193,17 +196,14 @@ export default {
   }
   .loginBg_wrapper {
     width: 100%;
-    background: linear-gradient(
-      101.1deg,
-      rgba(252, 253, 255, 0) 0%,
-      rgba(120, 190, 18, 1) 50%,
-      rgba(252, 253, 255, 0) 100%
-    );
     display: flex;
     justify-content: center;
     align-items: center;
-    .loginBg {
-      width: 1000px;
+    img {
+      background-repeat: no-repeat;
+      background-position: right top;
+      background-attachment: fixed;
+      background-size: cover;
     }
   }
   .login_form {
@@ -214,6 +214,7 @@ export default {
     flex-direction: column;
     align-items: center;
     position: absolute;
+    top: 200px;
     right: calc((100vw - 1000px) / 2 + 80px);
     .demo-ruleForm {
       width: 80%;

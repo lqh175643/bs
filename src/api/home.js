@@ -25,3 +25,19 @@ export function footprint(options){
     data:options
   })
 }
+
+export function addGood(options){
+  return instance({
+    url:`/addGood`,
+    method:'post',
+    data:options
+  })
+}
+
+export function vipChange(options){
+  return instance({
+    url:`/vipChange`,
+    method:'post',
+    data:options
+  })
+}

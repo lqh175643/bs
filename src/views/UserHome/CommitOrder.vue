@@ -4,7 +4,7 @@
       <el-table-column fixed label="商品信息" width="320">
         <template #default="scope">
           <div v-for="(good, index) in scope.row.goods" :key="index">
-            <div class="goods_wrapper">
+            <div class="goods_wrapper" @click="goodClick(scope.row)">
               <img :src="good.img" alt="商品图片" />
               <div>{{ good.des }}</div>
             </div>
@@ -67,6 +67,7 @@ import { useStore } from "vuex";
 import { computed, reactive, ref } from "vue";
 import { formatDate, holdUserInfo } from "../../utils/util";
 import { commitOrder } from "../../api/order";
+import { useRouter } from "vue-router";
 
 import Star from "../../components/Star.vue";
 export default {
@@ -76,6 +77,7 @@ export default {
   },
   setup(props) {
     const store = useStore();
+    const router = useRouter();
     const tableData = computed(() => {
       return store.getters.shopHistory.filter(
         (val) => val.isReceive && val.isPay
@@ -113,6 +115,11 @@ export default {
           dialogVisible.value = false;
         });
     };
+    const goodClick = (row) => {
+      router.push({
+        path: `/detail/${row?.goods[0]?.category}/${row?.goods[0]?.jid}`,
+      });
+    };
     return {
       tableData,
       formatDate,
@@ -122,6 +129,7 @@ export default {
       commitForm,
       tempCommit,
       changeStar,
+      goodClick
     };
   },
 };

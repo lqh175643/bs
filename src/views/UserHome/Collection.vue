@@ -11,7 +11,7 @@
     />
     <el-table-column label="商品" width="600">
       <template #default="scope">
-        <div class="goods_wrapper">
+        <div class="goods_wrapper" @click="goodClick(scope.row)">
           <img :src="scope.row.goods.img" alt />
           <div>{{ scope.row.goods.des }}</div>
         </div>
@@ -21,7 +21,7 @@
     <el-table-column prop="operation" label="操作">
       <template #default="scope">
         <div class="operation_wrapper">
-          <template v-for="item in scope.row.operation">
+          <template v-for="(item,index) in scope.row.operation" :key="index">
             <div v-if="item == 'delete'" @click="btnDelete(scope.row)">删除</div>
             <div v-else-if="item == 'check'">查看</div>
           </template>
@@ -43,15 +43,17 @@
 import { ref, reactive, computed } from "vue";
 import { onBeforeMount } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { holdUserInfo } from '../../utils/util'
 import { deleteUserInfoArr, getShopBus } from "../../api/userHome";
 export default {
   name: "Collection",
   setup(props) {
-    let tableData = ref([]);
-    let tempDelete = ref("");
-    let dialogVisible = ref(false);
+    const tableData = ref([]);
+    const tempDelete = ref("");
+    const router = useRouter()
+    const dialogVisible = ref(false);
     const store = useStore();
     const wrapper_getCollection = (collection) => {
       tableData.value = [];
@@ -66,6 +68,7 @@ export default {
                 goods: {
                   img: val.imgUrl,
                   des: val.detail,
+                  category: val.category
                 },
                 jid: val.id,
                 price: val.price.split("￥")[1],
@@ -110,6 +113,11 @@ export default {
           dialogVisible.value = false;
         });
     };
+    const goodClick = (row)=>{
+      router.push({
+        path: `/detail/${row?.goods?.category}/${row.jid}`,
+      });
+    }
     onBeforeMount(() => {
       wrapper_getCollection(store.getters.collection);
     });
@@ -118,7 +126,8 @@ export default {
       tableData,
       btnDelete,
       shoucangDelete,
-      dialogVisible
+      dialogVisible,
+      goodClick
     };
   },
 };

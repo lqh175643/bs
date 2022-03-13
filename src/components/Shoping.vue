@@ -87,8 +87,8 @@
     </div>
     <template #footer>
       <div class="footer_wrapper">
+        <span v-if="is_vip" class="plus">Plus会员独享95折</span>
         <span class="allPrice">总计:￥{{ allPrice }}</span>
-
         <span class="payBtn" @click="goPay">去支付</span>
       </div>
     </template>
@@ -101,7 +101,7 @@ import { _addrMap } from "../utils/util";
 import { ElMessage, ElLoading } from "element-plus";
 import Coupon from "../components/Coupon.vue";
 import { generateOrder } from "../api/order";
-import { holdUserInfo } from "../utils/util";
+import { holdUserInfo,isVip } from "../utils/util";
 export default {
   name: "Shoping",
   components: {
@@ -131,6 +131,7 @@ export default {
     const dialogTableVisible = computed(() => props.dialogTableVisible);
     const activeName = ref("1");
     const addrs = store.getters.receivingAddress;
+    const is_vip = isVip(store.getters.vip,1234);
     const receiveInfo = addrs.map((addr) => {
       return {
         value: addr.addr_id,
@@ -155,6 +156,7 @@ export default {
       let val = 0;
       buyData.forEach((item) => (val += Number(item.price) * item.count));
       val = val - formData.campusBean / 100 - consumerCoupon;
+      if(is_vip) val = (val*0.95).toFixed(2)
       return val;
     });
 
@@ -212,7 +214,7 @@ export default {
             price: val.price,
             img: val.img,
             category: val.category,
-            isComment:false
+            isComment:false,
           };
         }),
         generateTime: Date.now(),
@@ -223,7 +225,8 @@ export default {
         receiveInfo: formData.receiveInfo,
         payMethod: formData.payMethod,
         isPay: true,
-        isReceive: false
+        isReceive: false,
+        is_vip
       }).then(
         () => {
           setTimeout(() => {
@@ -257,6 +260,7 @@ export default {
       goPay,
       handleCoupons,
       active_coupons,
+      is_vip,
       campusBeanOptions: [
         {
           value: 100,
@@ -275,7 +279,7 @@ export default {
   },
 };
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
 :deep(.select-trigger) {
   .el-input {
     width: 300px;
@@ -295,9 +299,13 @@ export default {
   position: absolute;
   left: 0;
   background-color: rgba(0, 0, 0, 0.2);
+  .plus {
+    position: absolute;
+    right: 240px;
+  }
   .allPrice {
     position: absolute;
-    right: 150px;
+    right: 120px;
   }
   .payBtn {
     position: absolute;
@@ -313,35 +321,9 @@ export default {
     cursor: pointer;
   }
 }
-.shoping_footer {
-  position: sticky;
-  bottom: 0px;
-  background-color: #999;
-  width: 500px;
-  height: 40px;
-}
 .bold_text {
   font-size: 18px;
   margin-bottom: 10px;
-}
-.dialog_wrapper {
-  max-height: 600px;
-  font-weight: 600;
-  overflow-y: auto;
-  position: relative;
-}
-.dialog_wrapper::-webkit-scrollbar {
-  width: 4px;
-}
-.dialog_wrapper::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-  background: rgba(0, 0, 0, 0.2);
-}
-.dialog_wrapper::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-  border-radius: 0;
-  background: rgba(0, 0, 0, 0.1);
 }
 .campusBean {
   line-height: 36px;

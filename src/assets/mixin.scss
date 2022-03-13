@@ -1,14 +1,37 @@
 $mybgc8:rgba(255,255,255,0.8);
 $mybgc6:rgba(255,255,255,0.6);
+$opacity7:0.7;
 :deep(.table_wrapper){
-  margin-top: 180px;
+  // margin-top: 180px;
   .el-table{
-    opacity: 0.7;
+    opacity: $opacity7;
   }
 }
 :deep(.el-table){
-  opacity: 0.7;
+  opacity: $opacity7;
+  border-radius: 10px;
 }
 :deep(.content_left_bar){
-  opacity: 0.7;
+  opacity: $opacity7;
+  .el-menu{
+    border-radius: 10px;
+    overflow: hidden;
+  }
+}
+:deep(.el-input__inner){
+  opacity: $opacity7;
+}
+:deep(.el-textarea__inner){
+  opacity: $opacity7;
+}
+:deep(.el-radio__inner){
+  opacity: $opacity7;
+}
+:deep(.el-button){
+  opacity: $opacity7;
+}
+:deep(.dialog_wrapper){
+  .el-dialog__footer{
+    height: 70px;
+  }
 }

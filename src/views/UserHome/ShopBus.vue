@@ -14,7 +14,7 @@
     />
     <el-table-column label="商品" width="450">
       <template #default="scope">
-        <div class="goods_wrapper">
+        <div class="goods_wrapper" @click="goodClick(scope.row)">
           <img :src="scope.row.goods.img" alt />
           <div>{{ scope.row.goods.des }}</div>
         </div>
@@ -86,10 +86,10 @@
   />
 </template>
 <script>
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import { useStore } from "vuex";
-import { onBeforeMount } from "vue";
+import { useRouter } from "vue-router";
 
 import Shoping from "../../components/Shoping.vue";
 import { getShopBus, deleteUserInfoArrObj } from "../../api/userHome";
@@ -102,6 +102,7 @@ export default {
   },
   setup(props) {
     const store = useStore();
+    const router = useRouter();
     const multipleTableRef = ref();
     let totleCount = ref("0");
     let totlePrice = ref("0.00");
@@ -142,7 +143,7 @@ export default {
           des: item.goods.des,
           price: item.price,
           count: computed(() => item.count),
-          category: item.goods.category
+          category: item.goods.category,
         });
       });
     };
@@ -180,7 +181,11 @@ export default {
       return row.jid;
     };
     const shopBusDelete = () => {
-      deleteUserInfoArrObj({ Ptarget:'shopBus', target: "jid",val:[tempDelete.value] })
+      deleteUserInfoArrObj({
+        Ptarget: "shopBus",
+        target: "jid",
+        val: [tempDelete.value],
+      })
         .then(
           async (res) => {
             ElMessage({
@@ -210,7 +215,7 @@ export default {
     const wrapper_getShopBus = (shopBus) => {
       tableData.value = [];
       const params = {
-        ids: shopBus.map((val)=>val.jid),
+        ids: shopBus.map((val) => val.jid),
       };
       getShopBus(params).then(
         (res) => {
@@ -220,7 +225,7 @@ export default {
                 goods: {
                   img: val.imgUrl,
                   des: val.detail,
-                  category: shopBus[index].category
+                  category: shopBus[index].category,
                 },
                 jid: val.id,
                 price: val.price.split("￥")[1],
@@ -236,14 +241,19 @@ export default {
         }
       );
     };
+    const goodClick = (row) => {
+      router.push({
+        path: `/detail/${row?.goods?.category}/${row.jid}`,
+      });
+    };
     onBeforeMount(() => {
       wrapper_getShopBus(store.getters.shopBus);
     });
-    const myrefresh = async ()=>{
-      multipleTableRef.value.clearSelection()
-      await holdUserInfo(store)
+    const myrefresh = async () => {
+      multipleTableRef.value.clearSelection();
+      await holdUserInfo(store);
       wrapper_getShopBus(store.getters.shopBus);
-    }
+    };
 
     return {
       multipleTableRef,
@@ -262,7 +272,8 @@ export default {
       buyBtn,
       buyData,
       dialogTableVisible,
-      myrefresh
+      myrefresh,
+      goodClick,
     };
   },
 };

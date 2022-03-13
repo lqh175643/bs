@@ -87,7 +87,6 @@ export default {
       changeTheme(color.value);
     };
     const scrollGet = (e) => {
-      console.log(1234);
     };
     const getData = () => {
       if(totalCount.value!=-1 && query.page*query.limit >= totalCount.value) return

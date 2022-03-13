@@ -98,8 +98,12 @@ export default {
 .goods {
   display: flex;
   flex-wrap: wrap;
+  float: left;
   .goods_item{
-    width: 225px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 237px;
   }
 }
 </style>

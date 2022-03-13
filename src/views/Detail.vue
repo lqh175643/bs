@@ -198,6 +198,7 @@ export default {
         detailShoucang({
           target: "collect",
           jid,
+          category
         }).then((res) => {
           ElMessage({
             message: "收藏成功",

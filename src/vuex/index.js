@@ -3,55 +3,64 @@ const store = createStore({
   state() {
     return {
       count: 0,
-      userInfo:{},
-      clientHeight:document.documentElement.clientHeight
+      userInfo: {},
+      clientHeight: document.documentElement.clientHeight
     };
   },
   mutations: {
     increment(state) {
       state.count++;
     },
-    updateUserInfo(state,payload){
+    updateUserInfo(state, payload) {
       state.userInfo = payload
+    },
+    updateClientHeight(state){
+      state.clientHeight = document.documentElement.clientHeight
     }
   },
-  getters:{
-    userInfo:state=>{
+  getters: {
+    userInfo: state => {
       return state.userInfo
     },
-    userId:state=>{
+    userId: state => {
       return state.userInfo.id
     },
-    username:state=>{
+    username: state => {
       return state.userInfo.username
     },
-    shopBus:state=>{
+    shopBus: state => {
       return state.userInfo.shopBus || []
     },
-    collection:state=>{
+    collection: state => {
       return state.userInfo.collect || []
     },
-    footprint:state=>{
+    footprint: state => {
       return state.userInfo.footprint || []
     },
-    username:state=>{
+    username: state => {
       return state.userInfo.username || ''
     },
-    receivingAddress:state=>{
+    receivingAddress: state => {
       return state.userInfo.receivingAddress || []
     },
-    consumerCoupon:state=>{
+    consumerCoupon: state => {
       return state.userInfo.consumerCoupon || []
     },
-    campusBean:state=>{
+    campusBean: state => {
       return state.userInfo.campusBean || 0
     },
-    shopHistory:state=>{
+    shopHistory: state => {
       return state.userInfo.shopHistory || []
     },
-    clientHeight:state=>{
+    clientHeight: state => {
       return state.clientHeight || 0
-    }
+    },
+    vip: state => {
+      return state.userInfo.vip || {}
+    },
+    isAdministrator: state => {
+      return state.userInfo.isAdministrator || false
+    },
   },
   actions: {},
 });

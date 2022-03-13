@@ -90,3 +90,23 @@ export const starMap = {
   4:'好',
   5:'非常好'
 }
+export const selectCategorys = [
+  { label: "零食", value: "snacks" },
+  { label: "衣服", value: "clothes" },
+  { label: "礼物男", value: "snacks" },
+  { label: "礼物女", value: "snacks" },
+  { label: "文具", value: "snacks" },
+  { label: "书籍", value: "snacks" },
+  { label: "运动", value: "snacks" },
+  { label: "零食", value: "snacks" },
+  { label: "零食", value: "snacks" },
+  { label: "零食", value: "snacks" },
+];
+
+export const vipMap = [
+  {price:16,time:1},
+  {price:42,time:3},
+  {price:158,time:12}
+]
+
+export const const_category = ['snacks','clothes','allCategory']

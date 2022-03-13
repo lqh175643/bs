@@ -4,7 +4,7 @@
       <span class="margin_right_10">校园价</span>
       <span class="normal_price">{{ '￥' + price }}</span>
       <div class="plus">
-        <span class="plus_price">{{ '￥' + Math.floor(price * 0.95).toFixed(2) }}</span>
+        <span class="plus_price">{{ '￥' + (price * 0.95).toFixed(2) }}</span>
         <span class="plus_detail">PLUS会员专享价</span>
         <span class="plus_go">现在开通PLUS会员享限时特惠</span>
       </div>
@@ -18,7 +18,7 @@
       <div class="common_count_bom">10+</div>
     </div>
     <div class="promotion">
-      <span class="margin_right_10">促&nbsp销</span>
+      <span class="margin_right_10">促&nbsp;销</span>
       <span class="promotion_text">
         <span class="promotion_logo">多买优惠</span>
         <div class="next_line">满2件,总价打9.50折;满3件,总价打9.0折</div>

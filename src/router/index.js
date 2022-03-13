@@ -6,7 +6,6 @@ const router = createRouter({
   routes
 })
 router.beforeEach((to, from,next) => {
-  console.log(to)
   const token = get_local_storage('token')
   const name = to.name
   const limit = ['Detail','collection','shopBus']

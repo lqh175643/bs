@@ -1,10 +1,11 @@
 <template>
-  <CategoryBar @barChange="barChange" />
+  <CategoryBar v-if="isBar" @barChange="barChange" />
   <div class="goods">
     <div v-for="(item, index) in goodsDatas" :key="index" class="goods_item">
       <Goods :goodsData="item" />
     </div>
   </div>
+  <div style="display:none">{{ aa }}</div>
   <div class="block">
     <el-pagination
       v-model:currentPage="query.page"
@@ -20,7 +21,8 @@
 </template>
 <script>
 import { getCategoryData } from "../api/home";
-import { onBeforeMount, ref, reactive,computed } from "vue";
+import { const_category } from "../utils/constant";
+import { onBeforeMount, ref, reactive, computed,watch } from "vue";
 
 import CategoryBar from "../components/CategoryBar.vue";
 import Goods from "../components/Goods.vue";
@@ -43,27 +45,39 @@ export default {
       page: 1,
       limit: 30,
     });
+    const router = useRouter();
     const goodsDatas = ref([]);
-    let url = window.location.href.split("?")[0].split("/").pop();
+    const url = ref(decodeURI(window.location.href.split("?")[0].split("/").pop()));
+    const aa = computed(() => {
+      url.value = decodeURI(window.location.href.split("?")[0].split("/").pop())
+      getCategoryData(url.value, query)
+        .then((res) => {
+          totalCount.value = Number(res.totalCount);
+          goodsDatas.value = res.data;
+        })
+        .catch((err) => {
+          throw err;
+        });
+      return router.currentRoute.value.fullPath;
+    });
     const totalCount = ref(0);
     const currentPage = ref(1);
-    const router = useRouter();
-    const currentSize = ref(30)
+    const currentSize = ref(30);
     const handleSizeChange = function (e) {
-      currentSize.value = e
+      currentSize.value = e;
       query.limit = e;
       query.page = 1;
-      getData(url, query);
+      getData(url.value, query);
       goTop();
     };
     const handleCurrentChange = function (e) {
       query.page = e;
-      getData(url, query);
+      getData(url.value, query);
       goTop();
     };
     const barChange = function (e) {
       query.searchLimit = e;
-      getData(url, query);
+      getData(url.value, query);
     };
     function getData(url, query) {
       getCategoryData(url, query)
@@ -72,7 +86,7 @@ export default {
           goodsDatas.value = res.data;
         })
         .catch((err) => {
-          throw err
+          throw err;
         });
     }
     function goTop() {
@@ -86,13 +100,13 @@ export default {
       }, 50);
     }
     onBeforeMount(() => {
-      getCategoryData(url, query)
+      getCategoryData(url.value, query)
         .then((res) => {
           totalCount.value = Number(res.totalCount);
           goodsDatas.value = res.data;
         })
         .catch((err) => {
-          throw err
+          throw err;
         });
     });
     return {
@@ -103,7 +117,9 @@ export default {
       handleCurrentChange,
       goodsDatas,
       barChange,
-      query
+      query,
+      isBar: const_category.includes(url),
+      aa,
     };
   },
 };

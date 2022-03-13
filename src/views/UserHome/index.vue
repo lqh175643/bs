@@ -110,7 +110,6 @@ export default {
     const itemClick = (e) => {
       if (e.target.localName == "li") {
         const index = e.target.dataset.index;
-        console.log(e.target.dataset.index);
         switch (index) {
           case "1-1":
             router.push({
@@ -256,7 +255,8 @@ export default {
   }
   .content {
     width: 100%;
-    margin-top: 50px;
+    overflow: hidden;
+    margin-top: -30px;
     .content_left {
       width: 200px;
       float: left;
@@ -293,10 +293,19 @@ export default {
       .goHome {
         display: inline-block;
         float: right;
+        margin-top: 26px;
+        margin-bottom: 100px;
         cursor: pointer;
         .tab_bar_icon {
           margin: 0 8px;
         }
+      }
+      .goHome::before{
+        content: "";
+        display: block;
+        height: 0;
+        clear:both;
+        visibility: hidden;
       }
     }
   }

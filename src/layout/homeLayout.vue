@@ -46,7 +46,6 @@ export default {
     const store = useStore();
     const router = useRouter();
     let tabbar_icon_text = [
-      { text: "消息", icon: "icon-31daipingjia" },
       { text: "收藏", icon: "icon-shoucang", path: "/userHome/collection" },
       { text: "购物车", icon: "icon-gouwuche", path: "/userHome/shopbus" },
     ];
@@ -61,12 +60,14 @@ export default {
         path
       });
     };
+    window.addEventListener('resize',()=>store.commit('updateClientHeight'))
     return {
       goHome,
       changePath,
       tabbar_icon_text,
       home_btn,
       store,
+      router,
     };
   },
 };

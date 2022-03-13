@@ -1,9 +1,9 @@
 <template>
   <div class="login_wrapper">
-    <div class="top_notice">欢迎注册！领取优惠券</div>
+    <!-- <div class="top_notice">欢迎注册！领取优惠券</div>
     <div class="loginBg_wrapper">
       <img class="loginBg" src="../assets/loginBg.jpg" alt="注册背景" />
-    </div>
+    </div> -->
     <div class="login_form">
       <div class="login_form_header">欢迎注册</div>
       <div class="login_form_line"></div>
@@ -27,6 +27,9 @@
         <el-form-item label="确认密码" prop="pass2">
           <el-input v-model="ruleForm.pass2" type="password" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item label="管理码">
+          <el-input v-model="ruleForm.invitation" placeholder="管理员填写" autocomplete="off"></el-input>
+        </el-form-item>
       </el-form>
       <div class="login_btn" @click="submitForm">注&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;册</div>
       <div class="login_form_line"></div>
@@ -48,7 +51,8 @@ export default {
       user: '',
       pass: '',
       phone: '',
-      pass2: ''
+      pass2: '',
+      invitation: '',
     })
     const router = useRouter()
     function login() {
@@ -60,7 +64,8 @@ export default {
       const param = {
         user: ruleForm.user,
         pass: ruleForm.pass,
-        phone: ruleForm.phone
+        phone: ruleForm.phone,
+        invitation: ruleForm.invitation
       }
       ruleFormRef.value.validate((valid) => {
         if (valid) {
@@ -178,11 +183,12 @@ export default {
   .login_form {
     background-color: $mybgc6;
     width: 435px;
-    height: 455px;
+    height: 520px;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: absolute;
+    top: 120px;
     right: calc((100vw - 1000px) / 2 + 80px);
     .demo-ruleForm {
       width: 80%;

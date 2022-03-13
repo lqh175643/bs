@@ -105,7 +105,7 @@ export default {
       holdUserInfo(store);
     }
     const handleAddress = (e) => {
-      console.log(e);
+      // console.log(e);
     };
     return {
       submitForm,
@@ -128,6 +128,7 @@ export default {
   height: 30px;
   padding: 0 10px 0 20px;
   margin-bottom: 14px;
+  background-color: $mybgc6;
   span {
     color: #ff6aa2;
     font-size: 14px;

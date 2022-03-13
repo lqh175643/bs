@@ -53,11 +53,17 @@ function hideName(val){
   if(!len) return
   return val.slice(0,3)+'*****'+val.slice(-3)
 }
+
+function isVip(time){
+  return (time-Date.now())>0
+}
+
 export {
   str_parse,
   holdUserInfo,
   deleteUserInfo,
   _addrMap,
   formatDate,
-  hideName
+  hideName,
+  isVip
 }

@@ -103,7 +103,7 @@ export default {
   margin-left: 30px;
 }
 .addr_wrapper {
-  width: 100%;
+  width:96%;
 }
 .addr_wrapper {
   border: 2px solid #e6e6e6;
