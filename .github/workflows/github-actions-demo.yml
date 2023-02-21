@@ -22,7 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          - token: ${{ secrets.ACTION_DEMO }}
+          token: ${{ secrets.ACTION_DEMO }}
 
       - name: Install and Build
         run: |
