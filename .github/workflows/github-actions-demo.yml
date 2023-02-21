@@ -32,4 +32,4 @@ jobs:
         with:
           token: ${{ secrets.ACTION_DEMO }}
           branch: master
-          folder: build
+          folder: bs/build
