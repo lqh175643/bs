@@ -32,5 +32,5 @@ jobs:
         env:
           ACCESS_TOKEN: ${{ secrets.ACTION_DEMO }}
           BRANCH: master
-          FOLDER: build
           BUILD_SCRIPT: npm install && npm run build
+          folder: build
