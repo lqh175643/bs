@@ -28,9 +28,8 @@ jobs:
           npm run build
 
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: JamesIves/github-pages-deploy-action@master
         env:
-          ACCESS_TOKEN: ${{ secrets.ACTION_DEMO }}
-          BRANCH: master
-          BUILD_SCRIPT: npm install && npm run build
+          token: ${{ secrets.ACTION_DEMO }}
+          branch: master
           folder: build
