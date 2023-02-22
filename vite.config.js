@@ -23,6 +23,7 @@ export default defineConfig({
       }
     }
   },
+  base: '/bs',
   server: {
     host: true,
     port: 8080,
