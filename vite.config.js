@@ -22,5 +22,16 @@ export default defineConfig({
         additionalData: `@import "./src/assets/mixin.scss";`,
       }
     }
+  },
+  server: {
+    host: true,
+    port: 8080,
+    strictPort: false,
+    proxy: {
+      '/lqh175643.github.io':{
+        target: 'https://lqh175643.github.io/bs/assets/',
+        changeOrigin: true
+      }
+    }
   }
 })
