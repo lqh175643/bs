@@ -15,7 +15,7 @@
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"
   },
-  "homepage": "https://lqh175643.github.io/bs",
+  "homepage": "https://lqh175643.github.io/bs/assets",
   "devDependencies": {
     "@vue/compiler-sfc": "^3.0.4",
     "sass": "^1.49.9",
