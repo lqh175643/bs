@@ -33,12 +33,9 @@ export default defineConfig({
   server: {
     host: true,
     port: 8080,
-    strictPort: false,
-    proxy: {
-      '/lqh175643.github.io':{
-        target: 'https://lqh175643.github.io/bs/assets/',
-        changeOrigin: true
-      }
-    }
+    strictPort: false
+  },
+  build: {
+    target: 'es2020'
   }
 })
