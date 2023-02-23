@@ -44,12 +44,12 @@
   </el-drawer>
 </template>
 <script>
-import Search from "../components/Search.vue";
-import IconText from "../components/IconText.vue";
-import Login from "../components/Login.vue";
-import Swiper from "../components/Swiper.vue";
-import Goods from "../components/Goods.vue";
-import Category from "../components/Category.vue";
+import Search from "@/components/Search.vue";
+import IconText from "@/components/IconText.vue";
+import Login from "@/components/Login.vue";
+import Swiper from "@/components/Swiper.vue";
+import Goods from "@/components/Goods.vue";
+import Category from "@/components/Category.vue";
 
 import { reactive, ref, onBeforeMount } from "vue";
 import { useStore } from "vuex";

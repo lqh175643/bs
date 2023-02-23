@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div v-for="(item,index) in data" class="cate-item" :key="index" :data-myset="item.value" @click="getData">
-      <img :src="item.src" alt />
+      <img :src="getImageUrl(item.src)" alt />
       <p>{{ item.title }}</p>
     </div>
   </div>
@@ -17,16 +17,16 @@ export default {
       // default:()=>{}
       default: () => {
         return [
-          { title: '零食', src: 'src/assets/lingshi.png', value: 'snacks' },
-          { title: '衣服', src: 'src/assets/yifu.png', value: 'clothes' },
-          { title: '礼物男', src: 'src/assets/liwunan.png', value: 'giftBoy' },
-          { title: '礼物女', src: 'src/assets/liwunv.png', value: 'giftGirl' },
-          { title: '文具', src: 'src/assets/wenju.png',value:'stationery' },
-          { title: '书籍', src: 'src/assets/shuji.png',value:'book' },
-          { title: '运动', src: 'src/assets/yundong.png',value:'sport' },
-          { title: '零食', src: 'src/assets/1636710897364.jpg' },
-          { title: '零食', src: 'src/assets/1636710897364.jpg' },
-          { title: '零食', src: 'src/assets/1636710897364.jpg' }
+          { title: '零食', src: '../assets/lingshi.png', value: 'snacks' },
+          { title: '衣服', src: '../assets/yifu.png', value: 'clothes' },
+          { title: '礼物男', src: '../assets/liwunan.png', value: 'giftBoy' },
+          { title: '礼物女', src: '../assets/liwunv.png', value: 'giftGirl' },
+          { title: '文具', src: '../assets/wenju.png',value:'stationery' },
+          { title: '书籍', src: '../assets/shuji.png',value:'book' },
+          { title: '运动', src: '../assets/yundong.png',value:'sport' },
+          { title: '零食', src: '../assets/1636710897364.jpg' },
+          { title: '零食', src: '../assets/1636710897364.jpg' },
+          { title: '零食', src: '../assets/1636710897364.jpg' }
         ]
       }
     }
@@ -43,8 +43,12 @@ export default {
         }
       })
     }
+    const getImageUrl = (name) => {
+      return new URL(`${name}`, import.meta.url).href
+    }
     return {
-      getData
+      getData,
+    getImageUrl
     }
   }
 }

@@ -1,5 +1,6 @@
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
+const { resolve } = require('path')
 const vueI18nPlugin = {
   name: 'vue-i18n',
   transform(code, id) {
@@ -24,6 +25,11 @@ export default defineConfig({
     }
   },
   base: '/bs',
+  resolve: {
+    alias: [//配置别名
+      { find: '@', replacement: resolve(__dirname, 'src') }
+    ]
+  },
   server: {
     host: true,
     port: 8080,
