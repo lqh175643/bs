@@ -17,21 +17,21 @@ export default {
       // default:()=>{}
       default: () => {
         return [
-          { title: '零食', src: '../assets/lingshi.png', value: 'snacks' },
-          { title: '衣服', src: '../assets/yifu.png', value: 'clothes' },
-          { title: '礼物男', src: '../assets/liwunan.png', value: 'giftBoy' },
-          { title: '礼物女', src: '../assets/liwunv.png', value: 'giftGirl' },
-          { title: '文具', src: '../assets/wenju.png',value:'stationery' },
-          { title: '书籍', src: '../assets/shuji.png',value:'book' },
-          { title: '运动', src: '../assets/yundong.png',value:'sport' },
-          { title: '零食', src: '../assets/1636710897364.jpg' },
-          { title: '零食', src: '../assets/1636710897364.jpg' },
-          { title: '零食', src: '../assets/1636710897364.jpg' }
+          { title: '零食', src: 'src/assets/lingshi.png', value: 'snacks' },
+          { title: '衣服', src: 'src/assets/yifu.png', value: 'clothes' },
+          // { title: '礼物男', src: '../assets/liwunan.png', value: 'giftBoy' },
+          // { title: '礼物女', src: '../assets/liwunv.png', value: 'giftGirl' },
+          // { title: '文具', src: '../assets/wenju.png',value:'stationery' },
+          // { title: '书籍', src: '../assets/shuji.png',value:'book' },
+          // { title: '运动', src: '../assets/yundong.png',value:'sport' },
+          // { title: '零食', src: '../assets/1636710897364.jpg' },
+          // { title: '零食', src: '../assets/1636710897364.jpg' },
+          // { title: '零食', src: '../assets/1636710897364.jpg' }
         ]
       }
     }
   },
-  setup(props) {
+  setup() {
     let route = useRouter()
     let getData = function (e) {
       let url = e.currentTarget.getAttribute('data-myset')
@@ -44,7 +44,7 @@ export default {
       })
     }
     const getImageUrl = (name) => {
-      return new URL(`${name}`, import.meta.url).href
+      return new URL(location.origin+`${name}`, import.meta.url).href
     }
     return {
       getData,
