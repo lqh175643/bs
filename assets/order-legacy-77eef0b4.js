@@ -1,0 +1,1 @@
+System.register(["./index-legacy-168a0bef.js"],(function(e,t){"use strict";var r;return{setters:[e=>{r=e.s}],execute:function(){e({c:function(e){return r({url:"/order/commit",method:"post",data:e})},g:function(e){return r({url:"/order/generate",method:"post",data:e})},r:function(e){return r({url:"/order/receive",method:"post",data:e})}})}}}));
