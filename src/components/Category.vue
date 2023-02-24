@@ -1,13 +1,21 @@
 <template>
   <div class="wrapper">
     <div v-for="(item,index) in data" class="cate-item" :key="index" :data-myset="item.value" @click="getData">
-      <img :src="getImageUrl(item.src)" alt />
+      <img :src="item.src" alt />
       <p>{{ item.title }}</p>
     </div>
   </div>
 </template>
 <script>
 import { useRouter } from 'vue-router';
+import lingshi from '@/assets/lingshi.png'
+import yifu from '@/assets/yifu.png'
+import liwunan from '@/assets/liwunan.png'
+import liwunv from '@/assets/liwunv.png'
+import wenju from '@/assets/wenju.png'
+import shuji from '@/assets/shuji.png'
+import yundong from '@/assets/yundong.png'
+import qita from '@/assets/1636710897364.jpg'
 
 export default {
   name: 'Category',
@@ -17,16 +25,16 @@ export default {
       // default:()=>{}
       default: () => {
         return [
-          { title: '零食', src: 'src/assets/lingshi.png', value: 'snacks' },
-          { title: '衣服', src: 'src/assets/yifu.png', value: 'clothes' },
-          { title: '礼物男', src: 'src/assets/liwunan.png', value: 'giftBoy' },
-          { title: '礼物女', src: 'src/assets/liwunv.png', value: 'giftGirl' },
-          { title: '文具', src: 'src/assets/wenju.png',value:'stationery' },
-          { title: '书籍', src: 'src/assets/shuji.png',value:'book' },
-          { title: '运动', src: 'src/assets/yundong.png',value:'sport' },
-          { title: '零食', src: 'src/assets/1636710897364.jpg' },
-          { title: '零食', src: 'src/assets/1636710897364.jpg' },
-          { title: '零食', src: 'src/assets/1636710897364.jpg' }
+          { title: '零食', src: lingshi, value: 'snacks' },
+          { title: '衣服', src: yifu, value: 'clothes' },
+          { title: '礼物男', src: liwunan, value: 'giftBoy' },
+          { title: '礼物女', src: liwunv, value: 'giftGirl' },
+          { title: '文具', src: wenju,value:'stationery' },
+          { title: '书籍', src: shuji,value:'book' },
+          { title: '运动', src: yundong,value:'sport' },
+          { title: '零食', src: qita },
+          { title: '零食', src: qita },
+          { title: '零食', src: qita }
         ]
       }
     }
