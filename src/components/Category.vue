@@ -51,13 +51,8 @@ export default {
         }
       })
     }
-    const getImageUrl = (name) => {
-      console.log(location.origin+`${name}`,import.meta.url,1234)
-      return new URL(location.origin+`/${name}`, import.meta.url).href
-    }
     return {
-      getData,
-    getImageUrl
+      getData
     }
   }
 }

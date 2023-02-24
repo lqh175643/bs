@@ -7,6 +7,8 @@
 </template>
 <script lang="ts">
 import { reactive, onBeforeMount } from 'vue'
+import firstImg from '@/assets/1636710897364.jpg'
+import secondImg from '@/assets/1637053429093.jpg'
 export default {
     name: 'Swiper',
     props: {
@@ -29,9 +31,9 @@ export default {
     },
     setup(props) {
         let swiperData = reactive([{
-            src:'src/assets/1636710897364.jpg'
+            src:firstImg
         },{
-            src:'src/assets/1637053429093.jpg'
+            src:secondImg
         }])
         // onBeforeMount(() => {
         //     let params = props.swiperDataParams
