@@ -1,5 +1,7 @@
 import vue from '@vitejs/plugin-vue'
+import legacy from '@vitejs/plugin-legacy'
 import { defineConfig } from 'vite'
+
 const { resolve } = require('path')
 const vueI18nPlugin = {
   name: 'vue-i18n',
@@ -16,7 +18,12 @@ const vueI18nPlugin = {
   }
 }
 export default defineConfig({
-  plugins: [vue(), vueI18nPlugin],
+  plugins: [
+    vue(),
+    vueI18nPlugin,
+    legacy({
+    targets: ['defaults', 'not IE 11'],
+  })],
   css: {
     preprocessorOptions: {
       scss: {
@@ -34,8 +41,5 @@ export default defineConfig({
     host: true,
     port: 8080,
     strictPort: false
-  },
-  build: {
-    target: 'es2020'
   }
 })

@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@element-plus/icons": "^0.0.11",
+    "@vitejs/plugin-legacy": "^4.0.1",
     "@vitejs/plugin-vue": "^4.0.0",
     "axios": "^0.21.1",
     "element-plus": "^1.2.0-beta.3",
@@ -17,8 +18,12 @@
   },
   "homepage": "https://lqh175643.github.io/bs",
   "devDependencies": {
+    "@babel/core": "^7.21.0",
+    "@babel/preset-env": "^7.20.2",
     "@vue/compiler-sfc": "^3.0.4",
+    "jest": "^29.4.3",
     "sass": "^1.49.9",
+    "terser": "^5.16.5",
     "vite": "4.1.2"
   }
 }
