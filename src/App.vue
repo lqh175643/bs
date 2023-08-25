@@ -5,6 +5,7 @@
 
 <script>
 import Home from './views/Home.vue'
+console.log(12345)
 
 export default {
   name: 'App',
